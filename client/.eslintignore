@@ -1,0 +1,16 @@
+node_modules/
+.expo
+.expo-shared
+assets
+web
+.eslintrc.json
+.gitignore
+.github
+.vscode
+.git
+app.json
+babeel.config.js
+package-lock.json
+package.json
+README.md
+yarn.lock

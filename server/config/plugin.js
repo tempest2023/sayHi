@@ -2,9 +2,9 @@
 
 /** @type Egg.EggPlugin */
 module.exports = {
-  postgres: {
+  mysql: {
     enable: true,
-    package: 'egg-postgres',
+    package: 'egg-mysql',
   },
   cors: {
     enable: true,

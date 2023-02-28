@@ -67,7 +67,7 @@ function TabNavigation({ navigation, tabs, active }) {
 
   useEffect(() => {
     const changeTab = (key) => {
-      console.log('[debug]changeTab navigate to', key);
+      console.log('[debug] changeTab navigate to', key);
       navigation.replace(key);
     }
     const tmp = []

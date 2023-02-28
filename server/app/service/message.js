@@ -4,15 +4,18 @@
 
 const Service = require('egg').Service;
 
+const ROLE = require('../role');
+
 class MessageService extends Service {
-  async queryAll(data) {
+  async queryAll(data, role) {
     const { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} } = data;
     const message = await this.ctx.service.base.select('message', {
-      orders: [ ...sort ], // sort order
+      orders: [ sort ], // sort order
       limit: end - start, // limit the return rows
       offset: start, // data offset
       where: { ...filter },
     });
+    console.log(`[service.message.queryAll] DB: result: ${JSON.stringify(message)}`);
     const count = await this.ctx.service.base.count('message', filter);
     if (!message) {
       console.log('[service.message.queryAll][error]', message);
@@ -22,23 +25,26 @@ class MessageService extends Service {
         errmsg: 'fail to get result for this info',
       };
     }
-    // update retrieve_time for all messages
-    const retrieve_time = String(new Date().getTime());
-    const updateReqList = [];
-    message.forEach(msg => {
-      updateReqList.push(this.ctx.service.base.update('message', {
-        retrieve_time,
-      }, { id: msg.id }));
-    });
-    const updateRes = await Promise.all(updateReqList);
-    if (updateRes.some(res => !res.success)) {
-      console.log('[service.message.queryAll] [error] fail to update retrieve_time when query messages', updateRes);
+    if(role === ROLE.RECEIVER) {
+      // update retrieve_time for all messages
+      const retrieve_time = String(new Date().getTime());
+      const updateReqList = [];
+      message.forEach(msg => {
+        updateReqList.push(this.ctx.service.base.update('message', {
+          id: msg.id,
+          retrieve_time,
+        }));
+      });
+      const updateRes = await Promise.all(updateReqList);
+      // console.log('[debug] update retrieve_time for all messages', updateRes);
+      if (updateRes.some(res => res.affectedRows !== 1)) {
+        console.log('[service.message.queryAll] [error] fail to update retrieve_time when query messages', JSON.stringify(updateRes));
+      }
+      message.forEach(msg => {
+        msg.retrieve_time = retrieve_time;
+      });
     }
-    message.forEach(msg => {
-      msg.retrieve_time = retrieve_time;
-    });
 
-    console.log(`[service.message.queryAll] DB: result: ${JSON.stringify(message)}`);
     return {
       data: message,
       success: true,
@@ -46,7 +52,7 @@ class MessageService extends Service {
     };
   }
 
-  async query(data) {
+  async query(data, role) {
     const message = await this.ctx.service.base.select('message', { where: { ...data } });
     console.log(`[service.message.query] DB: ${JSON.stringify(data)}, result: ${JSON.stringify(message)}`);
     if (!message || message.length === 0) {
@@ -56,22 +62,23 @@ class MessageService extends Service {
         errmsg: 'fail to get result for this info',
       };
     }
-
-    // update retrieve_time for all messages
-    const retrieve_time = String(new Date().getTime());
-    const updateReqList = [];
-    message.forEach(msg => {
-      updateReqList.push(this.ctx.service.base.update('message', {
-        retrieve_time,
-      }, { id: msg.id }));
-    });
-    const updateRes = await Promise.all(updateReqList);
-    if (updateRes.some(res => !res.success)) {
-      console.log('[service.message.query] [error] fail to update retrieve_time when query messages', updateRes);
+    if(role === ROLE.RECEIVER) {
+      // update retrieve_time for all messages
+      const retrieve_time = String(new Date().getTime());
+      const updateReqList = [];
+      message.forEach(msg => {
+        updateReqList.push(this.ctx.service.base.update('message', {
+          retrieve_time,
+        }, { id: msg.id }));
+      });
+      const updateRes = await Promise.all(updateReqList);
+      if (updateRes.some(res => !res.success)) {
+        console.log('[service.message.query] [error] fail to update retrieve_time when query messages', updateRes);
+      }
+      message.forEach(msg => {
+        msg.retrieve_time = retrieve_time;
+      });
     }
-    message.forEach(msg => {
-      msg.retrieve_time = retrieve_time;
-    });
 
     return {
       data: message[0],
@@ -106,7 +113,7 @@ class MessageService extends Service {
         errmsg: 'fail to insert',
       };
     }
-    return { success: true, data: res };
+    return { success: true, data: {id: res.insertId} };
   }
   /**
    * Update message info by id

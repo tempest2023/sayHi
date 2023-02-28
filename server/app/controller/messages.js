@@ -1,10 +1,12 @@
 'use strict';
 const BaseController = require('./base');
 
+const ROLE = require('../role');
+
 class MessageController extends BaseController {
   /**
    * select all messages sent by this user
-   * @returns message list
+   * @return message list
    */
   async index() {
     const { ctx } = this;
@@ -29,9 +31,9 @@ class MessageController extends BaseController {
   async new() {
     const { ctx } = this;
     const { start = 0, end = 1, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
-    // only can query the messages belong to this user.
+    // only can query the messages belong to this user as sender.
     filter.userid = ctx.request.header['x-userid'];
-    const res = await ctx.service.message.queryAll({ start, end, sort, filter });
+    const res = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.SENDER);
     console.log(`[controller.messages.new] ${JSON.stringify(res)}`);
     ctx.set('x-total-count', res.count);
     if (!res.success) {
@@ -56,8 +58,9 @@ class MessageController extends BaseController {
     };
     ctx.validate(createRule, { receiver_userid });
     filter.userid = ctx.request.header['x-userid'];
+    // only can query the messages belong to this user as receiver.
     filter.receiver_userid = receiver_userid;
-    const data = await ctx.service.message.queryAll({ start, end, sort, filter });
+    const data = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.SENDER);
     console.log(`[controller.messages.show] ${JSON.stringify(data)}`);
     return (ctx.body = { errno: 0, ...data });
 
@@ -65,7 +68,7 @@ class MessageController extends BaseController {
 
   /**
    * send mssage to a receiver
-   * @returns true
+   * @return true
    */
   async create() {
     const { ctx } = this;
@@ -96,7 +99,7 @@ class MessageController extends BaseController {
 
   /**
    * edit a message as sender
-   * @returns true
+   * @return true
    */
   async update() {
     const { ctx } = this;
@@ -119,7 +122,7 @@ class MessageController extends BaseController {
 
   /**
    * delete a message as sender
-   * @returns true
+   * @return true
    */
   async destroy() {
     const { ctx } = this;
@@ -130,7 +133,7 @@ class MessageController extends BaseController {
     ctx.validate(createRule, { id });
     const userid = ctx.request.header['x-userid'];
     // check if the message belongs to this user
-    const msg = await ctx.service.message.query({ id, userid });
+    const msg = await ctx.service.message.query({ id, userid }, ROLE.SENDER);
     if (!msg || !msg.success) {
       return (ctx.body = { ...msg });
     }

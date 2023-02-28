@@ -12,20 +12,38 @@ module.exports = appInfo => {
    **/
   const config = {
     mode: 'file',
-    postgres: {
+    // postgres: {
+    //   client: {
+    //     // host
+    //     host: '127.0.0.1',
+    //     // port
+    //     port: '5432',
+    //     // username
+    //     user: 'rentao',
+    //     // password
+    //     password: '',
+    //     // database
+    //     database: 'SayHi',
+    //   },
+    //   app: true,
+    //   agent: false,
+    // },
+    mysql: {
       client: {
         // host
         host: '127.0.0.1',
         // port
-        port: '5432',
+        port: 3306,
         // username
-        user: 'rentao',
+        user: 'root',
         // password
-        password: 'sayHi@)@)!)!$10',
+        password: '',
         // database
         database: 'SayHi',
       },
+      // load into app, default is open
       app: true,
+      // load into agent, default is close
       agent: false,
     },
     redis: {

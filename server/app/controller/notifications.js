@@ -1,17 +1,18 @@
 'use strict';
 const BaseController = require('./base');
+const ROLE = require('../role');
 
 class NotificationController extends BaseController {
   /**
    * select all messages received by this user
-   * @returns message list
+   * @return message list
    */
   async index() {
     const { ctx } = this;
     const { start = 0, end = 10, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
-    // only can query the messages belong to this user.
+    // only can query the messages belong to this user as receiver.
     filter.receiver_userid = ctx.request.header['x-userid'];
-    const res = await ctx.service.message.queryAll({ start, end, sort, filter });
+    const res = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.RECEIVER);
     console.log(`[controller.notifications.index] ${JSON.stringify(res)}`);
     ctx.set('x-total-count', res.count);
     if (!res.success) {
@@ -31,7 +32,7 @@ class NotificationController extends BaseController {
     const { start = 0, end = 1, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
     // only can query the messages belong to this user.
     filter.receiver_userid = ctx.request.header['x-userid'];
-    const res = await ctx.service.message.queryAll({ start, end, sort, filter });
+    const res = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.RECEIVER);
     console.log(`[controller.notifications.new] ${JSON.stringify(res)}`);
     ctx.set('x-total-count', res.count);
     if (!res.success) {
@@ -58,14 +59,14 @@ class NotificationController extends BaseController {
     const receiver_userid = ctx.request.header['x-userid'];
     filter.receiver_userid = receiver_userid;
     filter.userid = userid;
-    const data = await ctx.service.message.queryAll({ start, end, sort, filter });
+    const data = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.RECEIVER);
     console.log(`[controller.notifications.show] ${JSON.stringify(data)}`);
     return (ctx.body = { errno: 0, ...data });
 
   }
 
   /**
-   * @returns true
+   * @return true
    */
   async create() {
     return (this.ctx.body = { errno: 0 });
@@ -78,7 +79,7 @@ class NotificationController extends BaseController {
   }
   /**
    * update a message's retrieve_time as a receiver
-   * @returns true
+   * @return true
    */
   async update() {
     const { ctx } = this;
@@ -107,7 +108,7 @@ class NotificationController extends BaseController {
 
   /**
    * delete a message as receiver
-   * @returns true
+   * @return true
    */
   async destroy() {
     const { ctx } = this;

@@ -1,3 +1,4 @@
+'use strict';
 const UA = Symbol('Context#ua');
 const useragent = require('useragent');
 

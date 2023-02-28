@@ -9,21 +9,16 @@ const crypto = require('crypto');
 const uuid = require('uuid');
 const { v4: uuidv4 } = uuid;
 
-function randomString(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 function md5(text) {
   return crypto.createHash('md5').update(text).digest('hex');
 }
 
 class UserService extends Service {
+  /**
+   * check username and password to login
+   * @param {object} data { username, password, email }
+   * @returns 
+   */
   async login(data) {
     const { username, password, email } = data;
     if (!username && !email) {
@@ -48,21 +43,29 @@ class UserService extends Service {
         errmsg: 'fail to login, mismatched username and password',
       };
     }
+    user.forEach(item => {
+      item.password = null;
+    });
     return {
       data: user[0],
       success: true,
     };
   }
 
+  /**
+   * query all users by filter
+   * @param {object} data { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} }
+   * @returns 
+   */
   async queryAll(data) {
     const { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} } = data;
     const user = await this.ctx.service.base.select('user', {
-      orders: [ ...sort ], // sort order
+      orders: [ sort ], // sort order
       limit: end - start, // limit the return rows
       offset: start, // data offset
       where: { ...filter },
     });
-    const count = await this.ctx.service.base.count('user', filter);
+    const count = await this.ctx.service.base.count('user');
     if (!user) {
       console.log('[service.user.queryAll][error]', user);
       return {
@@ -83,6 +86,11 @@ class UserService extends Service {
     };
   }
 
+  /**
+   * query a user by specific attribute like id, userid, username, realname, email
+   * @param {object} data 
+   * @returns 
+   */
   async query(data) {
     const user = await this.ctx.service.base.select('user', { where: { ...data } });
     console.log(`[service.user.query] DB: ${JSON.stringify(data)}, result: ${JSON.stringify(user)}`);
@@ -93,6 +101,9 @@ class UserService extends Service {
         errmsg: 'fail to get result for this info',
       };
     }
+    user.forEach(item => {
+      item.password = null;
+    });
     // In this method, password can not be null, because it updates with this default info.
     return {
       data: user[0],
@@ -101,20 +112,20 @@ class UserService extends Service {
   }
 
   /**
-   * insert a new record to user
-   * @param {object} data user info {username, password, realname, email}
+   * insert a new user
+   * @param {object} data user info {password, realname, username = 'username', email, status = 'ACTIVE', introduction = "This guy didn't write the introduction.", age = 0, gender = "unknown", avatar = '', cover_image = ''}
    */
   async insert(data) {
     const nowTime = new Date().getTime();
     // create a new user
-    const { password, realname, email, status = 'ACTIVE' } = data;
+    const { password, realname, username = 'username', email, status = 'ACTIVE', introduction = "This guy didn't write the introduction.", age = 0, gender = "unknown", avatar = '', cover_image = '' } = data;
     let userid = uuidv4();
     let useridDup = await this.query({ userid });
     while (useridDup && useridDup.success) {
       userid = uuidv4();
       useridDup = await this.query({ userid });
     }
-    // check username duplicate
+    // check email duplicate
     const user = await this.query({ email });
     if (user && user.success) {
       return {
@@ -123,10 +134,8 @@ class UserService extends Service {
         errmsg: 'fail to register, duplicate email',
       };
     }
-    const username = randomString(7);
-    const id = await this.ctx.service.base.count('user') + 1;
-    const res = await this.ctx.service.base.insert('user', { id, username, userid, email, password, realname, create_time: nowTime, edit_time: nowTime, status });
-    console.log(`[service.user.insert] DB: ${JSON.stringify({ id, userid, username, email, password, realname, status })}, result: ${JSON.stringify(res)}`);
+    const res = await this.ctx.service.base.insert('user', { username, userid, email, password, realname, age, gender, avatar, cover_image, introduction, create_time: nowTime, edit_time: nowTime, status });
+    console.log(`[service.user.insert] DB: ${JSON.stringify({ username, userid, email, password, realname, age, gender, avatar, cover_image, introduction, create_time: nowTime, edit_time: nowTime, status })}, result: ${JSON.stringify(res)}`);
     if (!res) {
       return {
         success: false,
@@ -134,10 +143,10 @@ class UserService extends Service {
         errmsg: 'fail to insert',
       };
     }
-    return { success: true, data: res };
+    return { success: true, data: { id: res.insertId }};
   }
   /**
-   * Update user information by id
+   * Update user information by userid
    * @param {object} data  user info {id, username, password, realname, email}
    */
   async update(data) {
@@ -180,9 +189,14 @@ class UserService extends Service {
     }
     return { success: true, data: { ...user, ...data } };
   }
+  /**
+   * Delete a user by userid
+   * @param {object} data {userid}
+   * @returns 
+   */
   async delete(data) {
     const { userid } = data;
-    const user = await this.query({ userid });
+    const user = await this.ctx.service.user.query({ userid });
     if (!user || !user.success) {
       return {
         success: false,

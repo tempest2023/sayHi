@@ -1,14 +1,14 @@
-## Nimble Challenge: Chat Room App
+## Chat&Date App
 > Author: Tempest(tar118@pitt.edu)
 > Profile: https://blog.epicanecdotes.games
 
-This project is a chat room application which is for Nimble Full stack challenge.
+This project is a chat & date application which is for Full stack challenge event.
 
 ## Frontend Part
 
 [React-Native](https://reactnative.dev/): React Native combines the best parts of native development with React, a best-in-class JavaScript library for building user interfaces. You can use React Native today in your existing Android and iOS projects or you can create a whole new app from scratch.
 
-More Details: see `/client/README.md`
+More Details: see [`/client/README.md`](./client/README.md)
 
 ### Features
 - [x] sign up
@@ -58,6 +58,8 @@ Redis+Token Authorization
 RESTful API
 
 API Document: [Postman Workspaces SayHi](https://documenter.getpostman.com/view/4832479/2s847BUwDA)
+
+![API screenshot](./demo/APIs.png)
 
 ## Database
 

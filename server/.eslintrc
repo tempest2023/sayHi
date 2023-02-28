@@ -1,4 +1,4 @@
 {
-  "extends": "eslint-config-egg",
+  "extends": "koa",
   "root": true
 }

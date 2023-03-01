@@ -1,5 +1,6 @@
 ## Chat&Date App
 > Author: Tempest(tar118@pitt.edu)
+> 
 > Profile: https://blog.epicanecdotes.games
 
 This project is a chat & date application which is for Full stack challenge event.
@@ -28,9 +29,7 @@ More Details: see [`/client/README.md`](./client/README.md)
 
 More Details: see [`/server/README.md`](/server/README.md)
 
-### Protocol
-
-RESTful API
+### RESTful API
 
 - users
 - messages
@@ -51,7 +50,7 @@ sha256
 
 ### Auth
 
-Redis+Token Authorization
+Redis + Token Authorization
 
 ## Protocol
 

@@ -1,6 +1,8 @@
 ## Full Stack Challenge
 > Client Part
+> 
 > Author: Tempest (tar118@pitt.edu)
+> 
 > Website: https://blog.epicanecdotes.games/
 
 The client part of FC Challenge based on React Native

@@ -4,6 +4,39 @@ the backend of say hi
 
 ### Development
 
+#### 1. Launch your MySQL Server
+> You can launch the server on localhost or remote
+
+A. Launch your mysql server on localhost
+
+`/usr/local/bin/mysql.server start`
+
+B. Set the mysql setting in `/server/config/config.default.js` to remote mysql server
+
+> Other DB like PostgreSQL
+
+Set the PostgreSQL setting in `/server/config/config.default.js`
+
+#### 2. Launch your Redis Server
+
+A. launch your redis server on localhost
+
+`redis-server`
+
+B. set the redis setting in `/server/config/config.default.js` to remote redis server 
+
+#### 3. Import sql data structure to you DB.
+
+See `/sayhi.sql`
+
+Import sql data to MySQL:
+```shell
+# database name 'SayHi' is configed in config.default.js
+mysql -u username -p SayHi < sayhi.sql
+```
+
+#### 4. Install dependencies and Run the server
+
 ```bash
 $ yarn install
 $ yarn dev

@@ -26,7 +26,7 @@ More Details: see [`/client/README.md`](./client/README.md)
 [Egg.js](https://www.eggjs.org/): Born to build better enterprise frameworks and apps with Node.js & Koa. A Node.js server framework based on Koa.js with numerous middlewares and plug-ins.
 [Koa.js](https://koajs.com/): next generation web framework for node.js. Expressive HTTP middleware framework for node.js to make web applications and APIs more enjoyable to write.
 
-More Details: see `/server/README.md`
+More Details: see [`/server/README.md`](/server/README.md)
 
 ### Protocol
 
@@ -62,8 +62,9 @@ API Document: [Postman Workspaces SayHi](https://documenter.getpostman.com/view/
 ![API screenshot](./demo/APIs.png)
 
 ## Database
+> about database deployment & configs, data importing, see more in `server/README.md`
 
-PostgreSQL@15 + Redis
+PostgreSQL@15 + Redis  or  MySQL + Redis
 
 database backup: `./sayhi.sql`
 
@@ -84,7 +85,7 @@ database backup: `./sayhi.sql`
 ![6](./demo/6.png)
 
 ## Docker
-
+[TODO]
 Time-limited
 
 ## Resources References

@@ -1,7 +1,7 @@
 ## Chat&Date App
 > Author: Tempest(tar118@pitt.edu)
 > 
-> Profile: https://blog.epicanecdotes.games
+> Profile: https://tempest.fun/
 
 This project is a chat & date application which is for Full stack challenge event.
 

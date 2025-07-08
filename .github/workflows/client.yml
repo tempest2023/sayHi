@@ -30,6 +30,7 @@ jobs:
         cache-dependency-path: client/yarn.lock
 
     - name: Install dependencies
+      timeout-minutes: 10
       run: |
         cd client
         yarn install
@@ -38,3 +39,8 @@ jobs:
       run: |
         cd client
         npm run lint
+
+    - name: Build check
+      run: |
+        cd client
+        npx expo export --platform web --output-dir build-check

@@ -27,8 +27,11 @@ jobs:
     - name: Set up MySQL
       uses: mirromutth/mysql-action@v1.1
       with:
-        mysql version: '8.0'
+        host port: 3306
+        character set server: 'utf8mb4'
+        mysql version: '5.7'
         mysql database: 'SayHi'
+        mysql root password: 'root'
         mysql user: 'root'
         mysql password: 'root'
 

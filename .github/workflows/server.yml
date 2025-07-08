@@ -24,6 +24,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set up MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql version: '8.0'
+        mysql database: 'SayHi'
+        mysql user: 'root'
+        mysql password: ''
+
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.8.0
+      with:
+        redis-version: '6'
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -41,7 +54,8 @@ jobs:
         cd server
         npm run ci
 
-    - name: Build application
+    - name: Run Development
       run: |
         cd server
-        npm run build
+        npm run dev
+    

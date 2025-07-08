@@ -40,10 +40,20 @@ jobs:
         cd client
         npm run lint
 
-    - name: Build test
+    - name: Build Web App
       timeout-minutes: 2
       run: |
         cd client
-        npm run web &
-        sleep 30
-        echo "Build test completed - web server started successfully"
+        npm run web
+    
+    - name: Build iOS App
+      timeout-minutes: 2
+      run: |
+        cd client
+        npm run ios
+    
+    - name: Build Android App
+      timeout-minutes: 2
+      run: |
+        cd client
+        npm run android

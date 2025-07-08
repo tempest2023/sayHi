@@ -65,7 +65,7 @@ API Document: [Postman Workspaces SayHi](https://documenter.getpostman.com/view/
 
 PostgreSQL@15 + Redis  or  MySQL + Redis
 
-database backup: `./sayhi.sql`
+database backup: `./sayhi.mysql.sql`, `./sayhi.postgre.sql`
 
 ## Demo & Video
 

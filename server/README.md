@@ -13,6 +13,19 @@ A. Launch your mysql server on localhost
 
 B. Set the mysql setting in `/server/config/config.default.js` to remote mysql server
 
+C. Build mysql docker image
+
+```shell
+# ./Dockerfile
+docker build -t sayhi-mysql .
+
+# run mysql docker
+docker run -d -p 3306:3306 --name sayhi-mysql-container sayhi-mysql
+
+# stop mysql docker
+docker stop sayhi-mysql-container
+```
+
 > Other DB like PostgreSQL
 
 Set the PostgreSQL setting in `/server/config/config.default.js`

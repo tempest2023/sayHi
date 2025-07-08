@@ -1,119 +1,177 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
-import { Card, Title, Avatar, Text } from 'react-native-paper';
-import MsgModal, { showModal, hideModal } from '../components/MsgModal';
-import randomPickUp from '../apis/pickup';
+import { StyleSheet } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import Background from '../components/Background';
-import Header from '../components/Header';
-import Paragraph from '../components/Paragraph';
-import Button from '../components/Button';
 import TabNavigation from '../components/TabNavigation';
+import UserDiscoveryCard from '../components/organisms/UserDiscoveryCard';
+import EmptyState from '../components/molecules/EmptyState';
+import Typography from '../components/atoms/Typography';
+import MsgModal, { showModal, hideModal } from '../components/MsgModal';
+import useDiscovery from '../hooks/useDiscovery';
 import tabs from './tabs';
 import theme from '../theme';
-import { getData } from '../apis/localStorage';
-
-const defaultAvatar = require('../assets/default_avatar.png');
 
 const styles = StyleSheet.create({
-  pickupCard: {
-    width: '90%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
-  cardAction: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  skipButton: {
+  container: {
     flex: 1,
-    backgroundColor: theme.colors.secondary 
+    backgroundColor: theme.colors.background.default,
   },
-  chatButton: {
-    flex: 1,
-    backgroundColor: theme.colors.primary 
-  }
+  discoveryCard: {
+    alignSelf: 'center',
+  },
+  loadingText: {
+    marginTop: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xl,
+  },
 });
 
+/**
+ * Refactored PickScreen with clean architecture:
+ * - Separated data logic into useDiscovery hook
+ * - UI decomposed into UserDiscoveryCard organism
+ * - Improved error handling and loading states
+ * - Enhanced accessibility and user experience
+ * - Modern design system implementation
+ */
 function PickScreen({ navigation }) {
-  const [stranger, setStranger] = useState({});
-  const [msgTitle, setMsgTitle] = useState('');
-  const [msg, setMsg] = useState('');
-  const [visible, setVisible] = useState(false);
+  // Data and business logic handled by custom hook
+  const {
+    currentUser,
+    loading,
+    error,
+    skipUser,
+    retry,
+    isValidUser,
+  } = useDiscovery();
 
-  const skip = async () => {
-    const randomPickUpExceptMe = async () => {
-      const res = await randomPickUp();
-      if(!res || !res.success) {
-        setMsgTitle('Error');
-        setMsg(res.errmsg || 'Network Error');
-        showModal(setVisible);
-        return null;
-      }
-      const userid = await getData('userid');
-      const info = res.data[0];
-      if (info.userid === userid) {
-        const nextOne = await randomPickUpExceptMe();
-        return nextOne;
-      }
-      return info;
-    }
-    const info = await randomPickUpExceptMe();
-    setStranger(info);
-  }
+  // Modal state for error handling
+  const [visible, setVisible] = React.useState(false);
+  const [modalTitle, setModalTitle] = React.useState('');
+  const [modalMessage, setModalMessage] = React.useState('');
 
-  const chat = () => {
-    navigation.navigate('ChatScreen', { userid: stranger.userid });
-  }
+  /**
+   * Handle chat navigation
+   */
+  const handleChat = useCallback((user) => {
+    if (!user?.userid || !isValidUser(user)) {
+      setModalTitle('Error');
+      setModalMessage('Unable to start chat. Please try another person.');
+      showModal(setVisible);
+      return;
+    }
 
-  useEffect(()=>{
-    const randomPickUpExceptMe = async () => {
-      const res = await randomPickUp();
-      if(!res || !res.success) {
-        setMsgTitle('Error');
-        setMsg(res.errmsg || 'Network Error');
-        showModal(setVisible);
-        return null;
-      }
-      const userid = await getData('userid');
-      const info = res.data[0];
-      if (info.userid === userid) {
-        const nextOne = await randomPickUpExceptMe();
-        return nextOne;
-      }
-      return info;
+    navigation.navigate('ChatScreen', { userid: user.userid });
+  }, [navigation, isValidUser]);
+
+  /**
+   * Handle skip action with error handling
+   */
+  const handleSkip = useCallback(async () => {
+    try {
+      await skipUser();
+    } catch (err) {
+      setModalTitle('Error');
+      setModalMessage('Failed to load next person. Please try again.');
+      showModal(setVisible);
     }
-    const pickUpStranger = async () => {
-      const info = await randomPickUpExceptMe();
-      setStranger(info);
-    }
-    pickUpStranger();
+  }, [skipUser]);
+
+  /**
+   * Handle retry action
+   */
+  const handleRetry = useCallback(() => {
+    retry();
+  }, [retry]);
+
+  /**
+   * Handle modal close
+   */
+  const handleModalClose = useCallback(() => {
+    hideModal(setVisible);
   }, []);
+
+  /**
+   * Render loading state
+   */
+  if (loading && !currentUser) {
+    return (
+      <Background position="containerCenter" style={styles.container}>
+        <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+        <Typography
+          variant="body1"
+          color="secondary"
+          center
+          style={styles.loadingText}
+        >
+          Finding interesting people for you...
+        </Typography>
+        <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
+      </Background>
+    );
+  }
+
+  /**
+   * Render error state
+   */
+  if (error && !currentUser) {
+    return (
+      <Background position="containerCenter" style={styles.container}>
+        <EmptyState
+          title="Oops! Something went wrong"
+          description={error}
+          actionText="Try Again"
+          onAction={handleRetry}
+        />
+        <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
+      </Background>
+    );
+  }
+
+  /**
+   * Render empty state (no users available)
+   */
+  if (!currentUser && !loading) {
+    return (
+      <Background position="containerCenter" style={styles.container}>
+        <EmptyState
+          title="No one new right now"
+          description="Check back later to discover more people in your area!"
+          actionText="Refresh"
+          onAction={handleRetry}
+        />
+        <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
+      </Background>
+    );
+  }
+
   return (
-  <Background position="containerCenterWithTab">
-    <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
-    {stranger && <View style={styles.pickupCard}>
-      <Card>
-        <Card.Title title={stranger.realname || 'unknown'} subtitle={stranger.username || 'unknown'} />
-        <Card.Content>
-          <Avatar.Image size={64} style={styles.chatAvatar} source={stranger.avatar ? {uri: stranger.avatar} : defaultAvatar} />
-          <Title>Introduction</Title>
-          <Text>Gender: {stranger.gender || 'unknown'}</Text>
-          <Text>Age: {stranger.age || 'unknown'}</Text>
-          <Text>Email: {stranger.email || 'unknown'}</Text>
-        </Card.Content>
-        {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-        <Card.Actions style={styles.cardAction}>
-          <Button style={styles.skipButton} onPress={skip}>Skip</Button>
-          <Button style={styles.chatButton} onPress={chat}>Chat</Button>
-        </Card.Actions>
-      </Card>
-    </View>}
-    <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
-  </Background>);
+    <Background position="containerCenterWithTab" style={styles.container}>
+      {/* Error Modal */}
+      <MsgModal
+        title={modalTitle}
+        msg={modalMessage}
+        type="normal"
+        okText="Got it"
+        okCallback={handleModalClose}
+        visible={visible}
+      />
+
+      {/* User Discovery Card */}
+      {currentUser && (
+        <UserDiscoveryCard
+          user={currentUser}
+          onSkip={handleSkip}
+          onChat={handleChat}
+          loading={loading}
+          style={styles.discoveryCard}
+        />
+      )}
+
+      {/* Bottom Tab Navigation */}
+      <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
+    </Background>
+  );
 }
 
 PickScreen.propTypes = {

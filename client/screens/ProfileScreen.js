@@ -1,173 +1,275 @@
-import React, { memo, useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import React, { memo, useCallback, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { emailValidator, nameValidator, ageValidator, genderValidator, usernameValidator } from '../utils';
-import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import Background from '../components/Background';
 import Header from '../components/Header';
+import Avatar from '../components/atoms/Avatar';
+import Typography from '../components/atoms/Typography';
 import TextInput from '../components/TextInput';
-import theme from '../theme';
-import tabs from './tabs';
 import Button from '../components/Button';
 import TabNavigation from '../components/TabNavigation';
-import checkUserAuth from '../apis/checkUserAuth';
-import updateProfile from '../apis/updateProfile';
-import { saveData, secureSave } from '../apis/localStorage';
-
-const defaultAvatar = require('../assets/default_avatar.png');
+import MsgModal, { showModal, hideModal } from '../components/MsgModal';
+import useProfile from '../hooks/useProfile';
+import tabs from './tabs';
+import theme from '../theme';
 
 const styles = StyleSheet.create({
-  profileHeader: {
-    flexDirection: 'column',
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background.default,
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    height: 80,
+    paddingHorizontal: theme.spacing.xl,
   },
-  back: {
-    width: '100%',
-    marginTop: 12,
+  loadingText: {
+    marginTop: theme.spacing.md,
   },
-  button: {
-    marginTop: 12,
+  profileHeader: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.neutral[200],
+    backgroundColor: theme.colors.background.default,
+    ...theme.shadows.sm,
   },
-  label: {
-    color: theme.colors.secondary,
-    width: '100%',
+  avatar: {
+    marginBottom: theme.spacing.md,
+  },
+  headerTitle: {
+    textAlign: 'center',
+  },
+  form: {
+    flex: 1,
+    paddingHorizontal: theme.spacing.md,
+    paddingTop: theme.spacing.lg,
+  },
+  input: {
+    marginBottom: theme.spacing.sm,
+  },
+  actions: {
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.neutral[200],
+    backgroundColor: theme.colors.background.default,
+    gap: theme.spacing.md,
+  },
+  saveButton: {
+    // Primary button styling handled by Button component
+  },
+  logoutButton: {
+    // Outlined button styling handled by Button component
   },
 });
 
+/**
+ * Refactored ProfileScreen with clean architecture:
+ * - Separated data logic into useProfile hook
+ * - Enhanced form validation and error handling
+ * - Improved loading and saving states
+ * - Better accessibility and user experience
+ * - Modern design system implementation
+ */
 function ProfileScreen({ navigation }) {
-  const [avatar, setAvatar] = useState(null);
-  const [username, setUsername] = useState({ value: 'Username', error: '' });
-  const [realname, setRealname] = useState({ value: 'RealName', error: '' });
-  const [email, setEmail] = useState({ value: 'Email', error: '' });
-  const [gender, setGender] = useState({ value: 'female', error: '' });
-  const [age, setAge] = useState({ value: '0', error: '' });
+  // Data and business logic handled by custom hook
+  const {
+    profile,
+    loading,
+    saving,
+    errors,
+    updateField,
+    saveProfile,
+    logout,
+    getDisplayName,
+  } = useProfile();
 
-  const [msgTitle, setMsgTitle] = useState('');
-  const [msg, setMsg] = useState('');
-  const [visible, setVisible] = useState(false);
+  // Modal state for feedback
+  const [visible, setVisible] = React.useState(false);
+  const [modalTitle, setModalTitle] = React.useState('');
+  const [modalMessage, setModalMessage] = React.useState('');
 
-  useEffect(()=>{
-    const getUserProfile = async () => {
-      const res = await checkUserAuth();
-      if(!res || !res.success) {
-        // retrieve user profile failed, navigate to login page
-        console.log(`[debug] getUserProfile failed, navigate to login page, ${res.errno} ${res.errmsg}`);
-        navigation.navigate('LoginScreen');
-        return;  
-      }
-      console.log(`[debug] getUserProfile success, ${JSON.stringify(res)}`);
-      const { data = {} } = res;
-      if (data.avatar) {
-        setAvatar(data.avatar);
-      } 
-      if (data.username) {
-        setUsername({ value: data.username, error: '' });
-      }
-      if (data.realname) {
-        setRealname({ value: data.realname, error: '' });
-      }
-      if (data.gender) {
-        setGender({ value: data.gender, error: '' });
-      }
-      if (data.email) {
-        setEmail({ value: data.email, error: '' });
-      }
-      if (data.age) {
-        setAge({ value: String(data.age), error: '' });
-      }
-     }
-    getUserProfile();
-  }, [navigation])
-  const onSendPressed = async () => {
-    const emailError = emailValidator(email.value);
-    const usernameError = usernameValidator(username.value);
-    const realnameError = nameValidator(realname.value);
-    const genderError = genderValidator(gender.value);
-    const ageError = ageValidator(age.value);
-    if (emailError) {
-      setEmail({ ...email, error: emailError });
-      return;
+  /**
+   * Handle authentication failure
+   */
+  useEffect(() => {
+    if (!loading && !profile.username) {
+      // If profile couldn't be loaded, redirect to login
+      navigation.navigate('LoginScreen');
     }
-    if (usernameError) {
-      setUsername({ ...username, error: usernameError });
-      return;
-    }
-    if (realnameError) {
-      setRealname({ ...realname, error: realnameError });
-      return;
-    }
-    if (genderError) {
-      setGender({ ...gender, error: genderError });
-      return;
-    }
-    if (ageError) {
-      setAge({ ...age, error: ageError });
-      return;
-    }
-    const res = await updateProfile({
-      username: username.value,
-      realname: realname.value,
-      email: email.value,
-      gender: gender.value,
-      age: parseInt(age.value, 10),
-    })
-    if(!res || !res.success) {
-      // update profile failed
-      setMsg('Fail to update user profile.');
-      setMsgTitle('Error');
-      showModal(setVisible)
-    }
-    setMsg('Update user profile successfully.');
-    setMsgTitle('Info');
-    showModal(setVisible)
-  };
+  }, [loading, profile.username, navigation]);
 
-  const onLogout = async () => {
-    // login success, set token and userid
-    await saveData('userid', '');
-    await secureSave('token', '');
-    navigation.navigate('HomeScreen');
+  /**
+   * Handle save profile with feedback
+   */
+  const handleSave = useCallback(async () => {
+    const result = await saveProfile();
+    
+    setModalTitle(result.success ? 'Success' : 'Error');
+    setModalMessage(result.message);
+    showModal(setVisible);
+  }, [saveProfile]);
+
+  /**
+   * Handle logout with navigation
+   */
+  const handleLogout = useCallback(async () => {
+    const success = await logout();
+    if (success) {
+      navigation.navigate('HomeScreen');
+    } else {
+      setModalTitle('Error');
+      setModalMessage('Failed to logout. Please try again.');
+      showModal(setVisible);
+    }
+  }, [logout, navigation]);
+
+  /**
+   * Handle modal close
+   */
+  const handleModalClose = useCallback(() => {
+    hideModal(setVisible);
+  }, []);
+
+  /**
+   * Handle field changes
+   */
+  const handleFieldChange = useCallback((field) => (value) => {
+    updateField(field, value);
+  }, [updateField]);
+
+  /**
+   * Render loading state
+   */
+  if (loading) {
+    return (
+      <Background style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+          <Typography
+            variant="body1"
+            color="secondary"
+            center
+            style={styles.loadingText}
+          >
+            Loading profile...
+          </Typography>
+        </View>
+        <TabNavigation navigation={navigation} tabs={tabs} active="ProfileScreen" />
+      </Background>
+    );
   }
 
   return (
-    <Background>
-      <View style={styles.profileHeader}>
-        <Avatar.Image size={64} source={avatar ? {uri: avatar} : defaultAvatar} />
-      </View>
-      
-      <Header>{username.value}</Header>
-      <TextInput label="UserNnme" value={username.value} onChangeText={text => setUsername({ value: text, error: '' })} autoCapitalize="none" error={!!username.error} errorText={username.error}/>
-      <TextInput label="Real Name" value={realname.value} onChangeText={text => setRealname({ value: text, error: '' })} autoCapitalize="none" error={!!realname.error} errorText={realname.error}/>
-      
-      <TextInput
-        label="email"
-        returnKeyType="done"
-        value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
+    <Background style={styles.container}>
+      {/* Modal for feedback */}
+      <MsgModal
+        title={modalTitle}
+        msg={modalMessage}
+        type="normal"
+        okText="Got it"
+        okCallback={handleModalClose}
+        visible={visible}
       />
 
-      <TextInput label="Gender" value={gender.value} onChangeText={text => setGender({ value: text, error: '' })} autoCapitalize="none" error={!!gender.error} errorText={gender.error}/>
-      
-      <TextInput label="Age" value={age.value} onChangeText={text => setAge({ value: text, error: '' })} autoCapitalize="none" error={!!age.error} errorText={age.error}/>
+      {/* Profile Header */}
+      <View style={styles.profileHeader}>
+        <Avatar
+          source={profile.avatar}
+          size="xl"
+          style={styles.avatar}
+          accessibilityLabel={`${getDisplayName()}'s profile picture`}
+        />
+        <Header variant="h3" style={styles.headerTitle}>
+          {getDisplayName()}
+        </Header>
+      </View>
 
-      <Button mode="contained" onPress={onSendPressed} style={styles.button}>
-        Update Profile
-      </Button>
-      <Button mode="contained" onPress={onLogout} style={styles.button}>
-        Logout
-      </Button>
+      {/* Profile Form */}
+      <View style={styles.form}>
+        <TextInput
+          label="Username"
+          value={profile.username}
+          onChangeText={handleFieldChange('username')}
+          errorText={errors.username}
+          autoCapitalize="none"
+          accessibilityLabel="Username"
+          style={styles.input}
+        />
+
+        <TextInput
+          label="Real Name"
+          value={profile.realname}
+          onChangeText={handleFieldChange('realname')}
+          errorText={errors.realname}
+          accessibilityLabel="Real name"
+          style={styles.input}
+        />
+
+        <TextInput
+          label="Email"
+          value={profile.email}
+          onChangeText={handleFieldChange('email')}
+          errorText={errors.email}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          autoCompleteType="email"
+          accessibilityLabel="Email address"
+          style={styles.input}
+        />
+
+        <TextInput
+          label="Gender"
+          value={profile.gender}
+          onChangeText={handleFieldChange('gender')}
+          errorText={errors.gender}
+          autoCapitalize="none"
+          accessibilityLabel="Gender"
+          style={styles.input}
+        />
+
+        <TextInput
+          label="Age"
+          value={profile.age}
+          onChangeText={handleFieldChange('age')}
+          errorText={errors.age}
+          keyboardType="numeric"
+          accessibilityLabel="Age"
+          style={styles.input}
+        />
+      </View>
+
+      {/* Action Buttons */}
+      <View style={styles.actions}>
+        <Button
+          mode="contained"
+          onPress={handleSave}
+          loading={saving}
+          disabled={loading}
+          style={styles.saveButton}
+          accessibilityLabel="Save profile changes"
+        >
+          Update Profile
+        </Button>
+
+        <Button
+          mode="outlined"
+          onPress={handleLogout}
+          disabled={saving}
+          style={styles.logoutButton}
+          accessibilityLabel="Logout of account"
+        >
+          Logout
+        </Button>
+      </View>
+
+      {/* Bottom Tab Navigation */}
       <TabNavigation navigation={navigation} tabs={tabs} active="ProfileScreen" />
-      <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
     </Background>
   );
 }

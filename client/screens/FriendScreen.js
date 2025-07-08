@@ -1,117 +1,128 @@
-import React, { memo, useState, useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import React, { memo, useCallback } from 'react';
+import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { Avatar, Text } from 'react-native-paper';
 import Background from '../components/Background';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import TabNavigation from '../components/TabNavigation';
-import Paragraph from '../components/Paragraph';
-import theme from '../theme';
+import FriendsList from '../components/organisms/FriendsList';
+import MsgModal, { showModal, hideModal } from '../components/MsgModal';
+import useFriends from '../hooks/useFriends';
 import tabs from './tabs';
-import queryFriends from '../apis/queryFriends';
-import queryFriendsInfo from '../apis/queryFriendsInfo'
+import theme from '../theme';
 
-const defaultAvatar = require('../assets/default_avatar.png');
-
-const AvatarIconSize = 48;
-
-const styles = StyleSheet.create({
-  chatRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'space-between',
-    width: '100%',
-    height: 60,
-  },
-  chatAvatar: {
-    margin: 5,
-    width: AvatarIconSize,
-    height: AvatarIconSize,
-    backgroundColor: '#fff',
-  },
-  chatContent: {
-    flex: 7,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    height: 60,
-    marginLeft: 10,
-  },
-  chatTitle: {
-    fontSize: 14,
-  },
-  chatText: {
-    fontSize: 10,
-  }
-});
-
+/**
+ * Refactored FriendScreen with clean architecture:
+ * - Separated data logic into custom hook
+ * - UI decomposed into reusable components
+ * - Performance optimized with FlatList
+ * - Improved accessibility and error handling
+ * - Modern design system implementation
+ */
 function FriendScreen({ navigation }) {
-  const [friendList, setFriendList] = useState([]);
-  const [friendListView, setFriendListView] = useState([]);
-  const [msgTitle, setMsgTitle] = useState('');
-  const [msg, setMsg] = useState('');
-  const [visible, setVisible] = useState(false);
+  // Data and business logic handled by custom hook
+  const {
+    friends,
+    loading,
+    error,
+    refreshing,
+    refreshFriends,
+  } = useFriends();
 
-  useEffect(()=>{
-    const requestFriend = async () => {
-      const friendsList = await queryFriends();
-      console.log('[debug] friends list', friendsList);
-      const friendsInfoList = await queryFriendsInfo(friendsList);
-      const errorRes = friendsInfoList.filter(item => !item || !item.success);
-      if(errorRes.length > 0) {
-        console.log('[debug] query friends info error', friendsInfoList);
-        setMsgTitle('Error');
-        setMsg(errorRes[0].errmsg || 'Network Error');
-        showModal(setVisible);
-        return
-      }
-      console.log('[debug] request friends info', JSON.stringify(friendsInfoList));
-      const tmp = [];
-      friendsInfoList.forEach(item => {
-        tmp.push(item.data);
-      })
-      setFriendList(tmp);
+  // Modal state for error handling
+  const [visible, setVisible] = React.useState(false);
+  const [modalTitle, setModalTitle] = React.useState('');
+  const [modalMessage, setModalMessage] = React.useState('');
+
+  /**
+   * Handle friend/chat item press
+   * Navigates to chat screen with proper user context
+   */
+  const handleFriendPress = useCallback((friend) => {
+    if (!friend?.userid) {
+      setModalTitle('Error');
+      setModalMessage('Unable to open chat. Please try again.');
+      showModal(setVisible);
+      return;
     }
-    requestFriend();
-  }, [])
-  useEffect(()=>{
-    // [TODO] Friends ScrollView
-    const chat = (userid) => {
-      navigation.navigate('ChatScreen', { userid });
+
+    navigation.navigate('ChatScreen', { userid: friend.userid });
+  }, [navigation]);
+
+  /**
+   * Handle empty state action
+   * Navigates to discovery/pick screen
+   */
+  const handleEmptyAction = useCallback(() => {
+    navigation.navigate('PickScreen');
+  }, [navigation]);
+
+  /**
+   * Handle refresh with error handling
+   */
+  const handleRefresh = useCallback(() => {
+    try {
+      refreshFriends();
+    } catch (err) {
+      setModalTitle('Error');
+      setModalMessage('Failed to refresh friends list. Please try again.');
+      showModal(setVisible);
     }
-    console.log('[debug] updated friendList to generate friend list View', friendList);
-    const tmp = [];
-    friendList.forEach(item => {
-      tmp.push(<TouchableOpacity onPress={()=>{chat(item.userid)}} key={`chat_${item.userid}`} style={styles.chatRow}>
-          <Avatar.Image size={AvatarIconSize} style={styles.chatAvatar} source={item.avatar ? {uri: item.avatar} : defaultAvatar} />
-          <View style={styles.chatContent}>
-            <Text style={styles.chatTitle}>{item.realname || 'Unknown'}</Text>
-            <Text style={styles.chatText}>New Message Here!</Text>
-          </View>
-      </TouchableOpacity>)
-    })
-    setFriendListView(tmp);
-  }, [friendList, navigation])
+  }, [refreshFriends]);
+
+  /**
+   * Handle modal close
+   */
+  const handleModalClose = useCallback(() => {
+    hideModal(setVisible);
+  }, []);
+
   return (
-  <Background>
-    <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
-    {friendListView}
-    {friendListView.length === 0 && 
-    <View>
-      <Paragraph>You have no Friends, try to know more kindly people in Pick Tab.</Paragraph>
-    </View>
-    }
-    <TabNavigation navigation={navigation} tabs={tabs} active="FriendScreen" />
-  </Background>);
+    <Background style={styles.container}>
+      {/* Error Modal */}
+      <MsgModal
+        title={modalTitle}
+        msg={modalMessage}
+        type="normal"
+        okText="Got it"
+        okCallback={handleModalClose}
+        visible={visible}
+      />
+
+      {/* Friends List with all states handled */}
+      <FriendsList
+        friends={friends}
+        loading={loading}
+        error={error}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        onFriendPress={handleFriendPress}
+        onEmptyAction={handleEmptyAction}
+        style={styles.friendsList}
+      />
+
+      {/* Bottom Tab Navigation */}
+      <TabNavigation
+        navigation={navigation}
+        tabs={tabs}
+        active="FriendScreen"
+      />
+    </Background>
+  );
 }
 
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.background.default,
+  },
+  friendsList: {
+    flex: 1,
+    marginBottom: 80, // Account for tab navigation
+  },
+});
 
 FriendScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-}
+};
 
 export default memo(FriendScreen);

@@ -36,8 +36,8 @@ module.exports = appInfo => {
         port: 3306,
         // username
         user: 'root',
-        // password
-        password: '',
+        // password, default is root, change to your own password
+        password: 'root',
         // database
         database: 'SayHi',
       },

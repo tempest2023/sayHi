@@ -11,13 +11,13 @@ Simple GitHub Actions workflows for the React Native client and Egg.js server.
 ### 2. Client CI (`client.yml`)
 - **Trigger**: Changes to `client/**` files
 - **Commands**: 
-  - `npm install` - Install dependencies
+  - `yarn install` - Install dependencies
   - `npm run lint` - Run ESLint
 
 ### 3. Server CI (`server.yml`)
 - **Trigger**: Changes to `server/**` files  
 - **Commands**:
-  - `npm install` - Install dependencies
+  - `yarn install` - Install dependencies
   - `npm run ci` - Run lint + coverage (as defined in package.json)
   - `npm run build` - Build the application
 
@@ -53,14 +53,14 @@ Simple GitHub Actions workflows for the React Native client and Egg.js server.
 ### Client
 ```bash
 cd client
-npm install
+yarn install
 npm run lint
 ```
 
 ### Server  
 ```bash
 cd server
-npm install
+yarn install
 npm run ci      # lint + coverage
 npm run build   # build application
 ```

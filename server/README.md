@@ -9,7 +9,7 @@ the backend of say hi
 
 A. Launch your mysql server on localhost
 
-`/usr/local/bin/mysql.server start`
+`brew services start mysql`
 
 B. Set the mysql setting in `/server/config/config.default.js` to remote mysql server
 
@@ -21,13 +21,13 @@ Set the PostgreSQL setting in `/server/config/config.default.js`
 
 A. launch your redis server on localhost
 
-`redis-server`
+`brew services start redis`
 
 B. set the redis setting in `/server/config/config.default.js` to remote redis server 
 
 #### 3. Import sql data structure to you DB.
 
-See `/sayhi.sql`
+See `/sayhi.mysql.sql` or `/sayhi.postgre.sql`
 
 Import sql data to MySQL:
 ```shell

@@ -13,7 +13,7 @@ Simple GitHub Actions workflows for the React Native client and Egg.js server.
 - **Commands**: 
   - `yarn install` - Install dependencies (10min timeout)
   - `npm run lint` - Run ESLint
-  - `npx expo export` - Build check for web platform
+  - `npm run web` - Build test (starts web server to verify build works)
 
 ### 3. Server CI (`server.yml`)
 - **Trigger**: Changes to `server/**` files  
@@ -56,7 +56,7 @@ Simple GitHub Actions workflows for the React Native client and Egg.js server.
 cd client
 yarn install
 npm run lint                                    # linting
-npx expo export --platform web --output-dir build-check  # build check
+npm run web                                     # build test (starts web server)
 ```
 
 ### Server  

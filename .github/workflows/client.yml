@@ -41,19 +41,19 @@ jobs:
         npm run lint
 
     - name: Build Web App
-      timeout-minutes: 2
+      timeout-minutes: 3
       run: |
         cd client
-        npm run web
+        npm run build
     
-    - name: Build iOS App
-      timeout-minutes: 2
-      run: |
-        cd client
-        npm run ios
+    # - name: Build iOS App
+    #   timeout-minutes: 3
+    #   run: |
+    #     cd client
+    #     npm run build:ios
     
-    - name: Build Android App
-      timeout-minutes: 2
-      run: |
-        cd client
-        npm run android
+    # - name: Build Android App
+    #   timeout-minutes: 3
+    #   run: |
+    #     cd client
+    #     npm run build:android

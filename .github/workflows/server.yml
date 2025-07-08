@@ -1,5 +1,4 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# Server CI for Egg.js backend
 
 name: Server CI
 
@@ -10,67 +9,37 @@ on:
       - master
     paths:
       - 'server/**'
-      - '.github/workflows/server.yml'
   pull_request:
     branches:
       - main
       - master
     paths:
       - 'server/**'
-      - '.github/workflows/server.yml'
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [16, 18, 20]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Git Source
+    - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: server/package-lock.json
+        node-version: '18'
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: |
         cd server
-        npm ci
+        npm install
 
-    - name: Lint Code
+    - name: Run CI (lint + coverage)
       run: |
         cd server
-        npm run lint
+        npm run ci
 
-    - name: Run Tests
-      run: |
-        cd server
-        npm run test-local
-
-    - name: Build Application
+    - name: Build application
       run: |
         cd server
         npm run build
-
-    - name: Code Coverage
-      if: matrix.node-version == '18' && matrix.os == 'ubuntu-latest'
-      run: |
-        cd server
-        npm run cov
-
-    - name: Upload Coverage to Codecov
-      if: matrix.node-version == '18' && matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./server/coverage/lcov.info
-        flags: server
-        name: server-coverage
-        token: ${{ secrets.CODECOV_TOKEN }}

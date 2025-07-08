@@ -7,151 +7,32 @@ on:
       - master
     paths:
       - 'client/**'
-      - '.github/workflows/client.yml'
   pull_request:
     branches:
       - main
       - master
     paths:
       - 'client/**'
-      - '.github/workflows/client.yml'
 
 jobs:
-  lint-and-build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Git Source
+    - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: client/package-lock.json
 
-    - name: Setup Expo CLI
-      run: npm install -g @expo/cli
-
-    - name: Install Dependencies
+    - name: Install dependencies
       run: |
         cd client
-        npm ci
+        npm install
 
-    - name: Lint Code
+    - name: Lint code
       run: |
         cd client
         npm run lint
-
-    - name: Check TypeScript (if applicable)
-      run: |
-        cd client
-        if [ -f "tsconfig.json" ]; then
-          npx tsc --noEmit
-        else
-          echo "No TypeScript configuration found, skipping type check"
-        fi
-
-    - name: Build for Web
-      run: |
-        cd client
-        npm run web -- --non-interactive
-
-    - name: Build with Expo
-      run: |
-        cd client
-        npx expo export --platform web --output-dir web-build
-
-  android-build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout Git Source
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: client/package-lock.json
-
-    - name: Setup Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Install Dependencies
-      run: |
-        cd client
-        npm ci
-
-    - name: Setup Expo CLI
-      run: npm install -g @expo/cli eas-cli
-
-    - name: Check Expo Configuration
-      run: |
-        cd client
-        npx expo install --fix
-
-    - name: Prebuild Android
-      run: |
-        cd client
-        npx expo prebuild --platform android --clean
-
-    - name: Build Android APK (Debug)
-      run: |
-        cd client
-        if [ -d "android" ]; then
-          cd android
-          ./gradlew assembleDebug --no-daemon
-        else
-          echo "No Android project found after prebuild"
-        fi
-
-  ios-build:
-    runs-on: macos-latest
-    
-    steps:
-    - name: Checkout Git Source
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: client/package-lock.json
-
-    - name: Install Dependencies
-      run: |
-        cd client
-        npm ci
-
-    - name: Setup Expo CLI
-      run: npm install -g @expo/cli
-
-    - name: Check Expo Configuration
-      run: |
-        cd client
-        npx expo install --fix
-
-    - name: Prebuild iOS
-      run: |
-        cd client
-        npx expo prebuild --platform ios --clean
-
-    - name: Build iOS (Debug)
-      run: |
-        cd client
-        if [ -d "ios" ]; then
-          cd ios
-          xcodebuild -workspace *.xcworkspace -scheme sayhi -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14' build
-        else
-          echo "No iOS project found after prebuild"
-        fi

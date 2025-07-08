@@ -18,12 +18,14 @@ class BaseService extends Service {
     }
     return Object.prototype.toString.call(s) === '[object Object]' || Object.prototype.toString.call(s) === '[object Array]';
   }
+
   length(obj) {
     if (Object.prototype.toString.call(obj) === '[object Array]' || Object.prototype.toString.call(obj) === '[object Object]') {
       return Object.keys(obj).length;
     }
     return 0;
   }
+
   async count(name, filter) {
     try {
       const count = await this.app.mysql.count(table_prefix + name, filter);
@@ -33,6 +35,7 @@ class BaseService extends Service {
       throw new Error(`[service.base.count] DB: fail to count ${name}, ${e}`);
     }
   }
+
   async select(name, filter) {
     try {
       const res = await this.app.mysql.select(table_prefix + name, filter);
@@ -42,6 +45,7 @@ class BaseService extends Service {
       throw new Error(`[service.base.select] DB: fail to select ${name}, ${e}`);
     }
   }
+
   async get(name, filter) {
     if (this.length(filter) === 0) {
       console.log(`[service.base.getById] fail to get without a specific filter ${filter}`);
@@ -55,6 +59,7 @@ class BaseService extends Service {
       throw new Error(`[service.base.get] DB: fail to get ${name}, ${e}`);
     }
   }
+
   async insert(name, values) {
     try {
       const res = await this.app.mysql.insert(table_prefix + name, values);
@@ -64,10 +69,11 @@ class BaseService extends Service {
       throw new Error(`[service.base.insert] DB: fail to insert ${name}, ${e}`);
     }
   }
+
   async update(name, values, filter) {
     try {
       const res = await this.app.mysql.update(table_prefix + name, values, {
-        filter,
+        filter
       });
       return res;
     } catch (e) {
@@ -75,6 +81,7 @@ class BaseService extends Service {
       throw new Error(`[service.base.update] DB: fail to update ${name}, ${e}`);
     }
   }
+
   async delete(name, filter) {
     try {
       const res = await this.app.mysql.delete(table_prefix + name, filter);

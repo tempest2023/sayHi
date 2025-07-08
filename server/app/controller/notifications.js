@@ -9,7 +9,7 @@ class NotificationController extends BaseController {
    */
   async index() {
     const { ctx } = this;
-    const { start = 0, end = 10, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 10, sort = ['create_time', 'DESC'], filter = {} } = ctx.request.body;
     // only can query the messages belong to this user as receiver.
     filter.receiver_userid = ctx.request.header['x-userid'];
     const res = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.RECEIVER);
@@ -20,7 +20,7 @@ class NotificationController extends BaseController {
     }
     return (ctx.body = {
       errno: 0,
-      ...res,
+      ...res
     });
   }
 
@@ -29,7 +29,7 @@ class NotificationController extends BaseController {
    */
   async new() {
     const { ctx } = this;
-    const { start = 0, end = 1, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 1, sort = ['create_time', 'DESC'], filter = {} } = ctx.request.body;
     // only can query the messages belong to this user.
     filter.receiver_userid = ctx.request.header['x-userid'];
     const res = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.RECEIVER);
@@ -40,7 +40,7 @@ class NotificationController extends BaseController {
     }
     return (ctx.body = {
       errno: 0,
-      ...res,
+      ...res
     });
   }
 
@@ -51,9 +51,9 @@ class NotificationController extends BaseController {
   async show() {
     const { ctx } = this;
     const userid = this.getUserId();
-    const { start = 0, end = 10, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 10, sort = ['create_time', 'DESC'], filter = {} } = ctx.request.body;
     const createRule = {
-      userid: { type: 'string' },
+      userid: { type: 'string' }
     };
     ctx.validate(createRule, { userid });
     const receiver_userid = ctx.request.header['x-userid'];
@@ -62,7 +62,6 @@ class NotificationController extends BaseController {
     const data = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.RECEIVER);
     console.log(`[controller.notifications.show] ${JSON.stringify(data)}`);
     return (ctx.body = { errno: 0, ...data });
-
   }
 
   /**
@@ -74,9 +73,10 @@ class NotificationController extends BaseController {
 
   async edit() {
     return (this.ctx.body = {
-      errno: 0,
+      errno: 0
     });
   }
+
   /**
    * update a message's retrieve_time as a receiver
    * @return true
@@ -84,7 +84,7 @@ class NotificationController extends BaseController {
   async update() {
     const { ctx } = this;
     const createRule = {
-      retrieve_time: { type: 'string' },
+      retrieve_time: { type: 'string' }
     };
     const id = this.getUserId();
     console.log('[controller.notifications.update] ', JSON.stringify(ctx.request.body));
@@ -92,7 +92,7 @@ class NotificationController extends BaseController {
     const receiver_userid = ctx.request.header['x-userid'];
     const query = {
       receiver_userid,
-      id,
+      id
     };
     // check if the message belongs to this user
     const msg = await ctx.service.message.query(query);
@@ -114,7 +114,7 @@ class NotificationController extends BaseController {
     const { ctx } = this;
     const id = this.getUserId();
     const createRule = {
-      id: { type: 'string' },
+      id: { type: 'string' }
     };
     ctx.validate(createRule, { id });
     const receiver_userid = ctx.request.header['x-userid'];

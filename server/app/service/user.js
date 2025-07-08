@@ -17,7 +17,7 @@ class UserService extends Service {
   /**
    * check username and password to login
    * @param {object} data { username, password, email }
-   * @returns 
+   * @returns
    */
   async login(data) {
     const { username, password, email } = data;
@@ -25,7 +25,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 9999,
-        errmsg: 'Invalid Parameters',
+        errmsg: 'Invalid Parameters'
       };
     }
     let user;
@@ -40,7 +40,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 2001,
-        errmsg: 'fail to login, mismatched username and password',
+        errmsg: 'fail to login, mismatched username and password'
       };
     }
     user.forEach(item => {
@@ -48,22 +48,22 @@ class UserService extends Service {
     });
     return {
       data: user[0],
-      success: true,
+      success: true
     };
   }
 
   /**
    * query all users by filter
    * @param {object} data { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} }
-   * @returns 
+   * @returns
    */
   async queryAll(data) {
-    const { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} } = data;
+    const { start = 0, end = 10, sort = ['id', 'ASC'], filter = {} } = data;
     const user = await this.ctx.service.base.select('user', {
-      orders: [ sort ], // sort order
+      orders: [sort], // sort order
       limit: end - start, // limit the return rows
       offset: start, // data offset
-      where: { ...filter },
+      where: { ...filter }
     });
     const count = await this.ctx.service.base.count('user');
     if (!user) {
@@ -71,7 +71,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1001,
-        errmsg: 'fail to get result for this info',
+        errmsg: 'fail to get result for this info'
       };
     }
     // filter password
@@ -82,14 +82,14 @@ class UserService extends Service {
     return {
       data: user,
       success: true,
-      count,
+      count
     };
   }
 
   /**
    * query a user by specific attribute like id, userid, username, realname, email
-   * @param {object} data 
-   * @returns 
+   * @param {object} data
+   * @returns
    */
   async query(data) {
     const user = await this.ctx.service.base.select('user', { where: { ...data } });
@@ -98,7 +98,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1001,
-        errmsg: 'fail to get result for this info',
+        errmsg: 'fail to get result for this info'
       };
     }
     user.forEach(item => {
@@ -107,7 +107,7 @@ class UserService extends Service {
     // In this method, password can not be null, because it updates with this default info.
     return {
       data: user[0],
-      success: true,
+      success: true
     };
   }
 
@@ -118,7 +118,7 @@ class UserService extends Service {
   async insert(data) {
     const nowTime = new Date().getTime();
     // create a new user
-    const { password, realname, username = 'username', email, status = 'ACTIVE', introduction = "This guy didn't write the introduction.", age = 0, gender = "unknown", avatar = '', cover_image = '' } = data;
+    const { password, realname, username = 'username', email, status = 'ACTIVE', introduction = "This guy didn't write the introduction.", age = 0, gender = 'unknown', avatar = '', cover_image = '' } = data;
     let userid = uuidv4();
     let useridDup = await this.query({ userid });
     while (useridDup && useridDup.success) {
@@ -131,7 +131,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 2002,
-        errmsg: 'fail to register, duplicate email',
+        errmsg: 'fail to register, duplicate email'
       };
     }
     const res = await this.ctx.service.base.insert('user', { username, userid, email, password, realname, age, gender, avatar, cover_image, introduction, create_time: nowTime, edit_time: nowTime, status });
@@ -140,11 +140,12 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1002,
-        errmsg: 'fail to insert',
+        errmsg: 'fail to insert'
       };
     }
-    return { success: true, data: { id: res.insertId }};
+    return { success: true, data: { id: res.insertId } };
   }
+
   /**
    * Update user information by userid
    * @param {object} data  user info {id, username, password, realname, email}
@@ -158,7 +159,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1005,
-        errmsg: 'fail to find the item when updating',
+        errmsg: 'fail to find the item when updating'
       };
     }
 
@@ -175,7 +176,7 @@ class UserService extends Service {
       gender: gender || user.gender,
       avatar: avatar || user.avatar,
       status: status || user.status,
-      edit_time: edit_time || user.edit_time,
+      edit_time: edit_time || user.edit_time
     }, { userid });
 
     console.log(`[service.user.update] DB: ${JSON.stringify({ userid, username, email, password, realname, age, gender, avatar, status })}, result: ${JSON.stringify(res)}`);
@@ -184,15 +185,16 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1003,
-        errmsg: 'fail to update',
+        errmsg: 'fail to update'
       };
     }
     return { success: true, data: { ...user, ...data } };
   }
+
   /**
    * Delete a user by userid
    * @param {object} data {userid}
-   * @returns 
+   * @returns
    */
   async delete(data) {
     const { userid } = data;
@@ -201,7 +203,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1005,
-        errmsg: 'fail to find the item when deleting',
+        errmsg: 'fail to find the item when deleting'
       };
     }
     const res = await this.ctx.service.base.delete('user', { userid });
@@ -210,7 +212,7 @@ class UserService extends Service {
       return {
         success: false,
         errno: 1004,
-        errmsg: 'fail to delete',
+        errmsg: 'fail to delete'
       };
     }
     return { success: true, data: user.data };

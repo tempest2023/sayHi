@@ -39,12 +39,12 @@ module.exports = appInfo => {
         // password, default is root, change to your own password
         password: 'root',
         // database
-        database: 'SayHi',
+        database: 'SayHi'
       },
       // load into app, default is open
       app: true,
       // load into agent, default is close
-      agent: false,
+      agent: false
     },
     redis: {
       client: {

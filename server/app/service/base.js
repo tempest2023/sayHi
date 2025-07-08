@@ -6,6 +6,7 @@ const Service = require('egg').Service;
 
 const table_prefix = 'sayhi_';
 
+// this version is for egg-mysql
 class BaseService extends Service {
   isValidJson(s) {
     if (Object.prototype.toString.call(s) === '[object String]') {

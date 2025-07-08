@@ -28,11 +28,13 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
+        cache: 'yarn'
 
     - name: Install dependencies
+      timeout-minutes: 10
       run: |
         cd server
-        npm install
+        yarn install
 
     - name: Run CI (lint + coverage)
       run: |

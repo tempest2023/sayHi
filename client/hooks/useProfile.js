@@ -155,9 +155,7 @@ function useProfile() {
   /**
    * Get display name for user
    */
-  const getDisplayName = useCallback(() => {
-    return profile.realname || profile.username || 'User';
-  }, [profile.realname, profile.username]);
+  const getDisplayName = useCallback(() => profile.realname || profile.username || 'User', [profile.realname, profile.username]);
 
   // Load profile on mount
   useEffect(() => {

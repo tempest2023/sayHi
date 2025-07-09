@@ -68,9 +68,7 @@ function useDiscovery() {
   /**
    * Check if user data is valid
    */
-  const isValidUser = useCallback((user) => {
-    return user && user.userid && user.userid !== 'undefined';
-  }, []);
+  const isValidUser = useCallback((user) => user && user.userid && user.userid !== 'undefined', []);
 
   // Load initial user on mount
   useEffect(() => {

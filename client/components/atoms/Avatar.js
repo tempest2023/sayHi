@@ -1,10 +1,42 @@
 import React, { memo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { Avatar as PaperAvatar } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import theme from '../../theme';
+import { colors, sizes, shadows } from '../../theme';
 
 const defaultAvatar = require('../../assets/default_avatar.png');
+
+const styles = StyleSheet.create({
+  container: {
+    width: sizes.avatar.md,
+    height: sizes.avatar.md,
+    borderRadius: sizes.avatar.md / 2,
+    backgroundColor: colors.neutral[100],
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.sm,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: sizes.avatar.md / 2,
+  },
+  placeholder: {
+    width: '100%',
+    height: '100%',
+    borderRadius: sizes.avatar.md / 2,
+    backgroundColor: colors.neutral[300],
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    borderWidth: 2,
+    borderColor: colors.background.default,
+  },
+});
 
 /**
  * Enhanced Avatar component with size variants and online status indicator
@@ -26,7 +58,7 @@ function Avatar({
   style,
   ...props 
 }) {
-  const avatarSize = theme.sizes.avatar[size];
+  const avatarSize = sizes.avatar[size];
   const onlineIndicatorSize = Math.max(8, avatarSize * 0.2);
   
   return (
@@ -36,8 +68,8 @@ function Avatar({
         source={source ? { uri: source } : defaultAvatar}
         style={[
           styles.avatar,
-          theme.shadows.sm,
-          { backgroundColor: theme.colors.neutral[100] }
+          shadows.sm,
+          { backgroundColor: colors.neutral[100] }
         ]}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="image"
@@ -52,10 +84,10 @@ function Avatar({
               height: onlineIndicatorSize,
               borderRadius: onlineIndicatorSize / 2,
               backgroundColor: isOnline 
-                ? theme.colors.semantic.success 
-                : theme.colors.neutral[400],
+                ? colors.semantic.success 
+                : colors.neutral[400],
               borderWidth: 2,
-              borderColor: theme.colors.background.default,
+              borderColor: colors.background.default,
               position: 'absolute',
               bottom: 0,
               right: 0,
@@ -68,21 +100,6 @@ function Avatar({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  avatar: {
-    borderWidth: 1,
-    borderColor: theme.colors.neutral[200],
-  },
-  onlineIndicator: {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-  }
-});
 
 Avatar.propTypes = {
   source: PropTypes.string,

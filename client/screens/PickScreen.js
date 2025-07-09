@@ -1,7 +1,8 @@
 import React, { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { colors, spacing } from '../theme';
 import Background from '../components/Background';
 import TabNavigation from '../components/TabNavigation';
 import UserDiscoveryCard from '../components/organisms/UserDiscoveryCard';
@@ -10,19 +11,18 @@ import Typography from '../components/atoms/Typography';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import useDiscovery from '../hooks/useDiscovery';
 import tabs from './tabs';
-import theme from '../theme';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background.default,
+    backgroundColor: colors.background.default,
   },
   discoveryCard: {
     alignSelf: 'center',
   },
   loadingText: {
-    marginTop: theme.spacing.md,
-    paddingHorizontal: theme.spacing.xl,
+    marginTop: spacing.md,
+    paddingHorizontal: spacing.xl,
   },
 });
 
@@ -97,7 +97,7 @@ function PickScreen({ navigation }) {
   if (loading && !currentUser) {
     return (
       <Background position="containerCenter" style={styles.container}>
-        <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+        <ActivityIndicator size="large" color={colors.primary[500]} />
         <Typography
           variant="body1"
           color="secondary"

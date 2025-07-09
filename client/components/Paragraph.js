@@ -1,7 +1,18 @@
+/* eslint-disable import/no-named-as-default-member */
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../theme';
+import { colors, spacing, typography } from '../theme';
+
+const styles = StyleSheet.create({
+  base: {
+    marginBottom: spacing.md,
+    includeFontPadding: false,
+  },
+  center: {
+    textAlign: 'center',
+  },
+});
 
 /**
  * Paragraph component using design system typography
@@ -23,8 +34,8 @@ function Paragraph({
 }) {
   const textStyle = [
     styles.base,
-    theme.typography[variant],
-    { color: theme.colors.text[color] },
+    typography[variant],
+    { color: colors.text[color] },
     center && styles.center,
     style
   ];
@@ -39,16 +50,6 @@ function Paragraph({
     </Text>
   );
 }
-
-const styles = StyleSheet.create({
-  base: {
-    marginBottom: theme.spacing.md,
-    includeFontPadding: false,
-  },
-  center: {
-    textAlign: 'center',
-  },
-});
 
 Paragraph.propTypes = {
   variant: PropTypes.oneOf(['body1', 'body2', 'caption']),

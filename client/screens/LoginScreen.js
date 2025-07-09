@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import TextInput from '../components/TextInput';
-import theme from '../theme';
+import { colors } from '../theme';
 import { emailValidator, passwordValidator } from '../utils';
 import login from '../apis/login';
 import { saveData, secureSave } from '../apis/localStorage';
@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   label: {
-    color: theme.colors.secondary,
+    color: colors.secondary,
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    color: colors.primary,
   },
 });
 

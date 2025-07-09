@@ -4,7 +4,65 @@ import { TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import TouchableArea from '../atoms/TouchableArea';
 import Typography from '../atoms/Typography';
-import theme from '../../theme';
+import { colors, spacing, borderRadius, shadows, typography } from '../../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.background.default,
+    borderTopWidth: 1,
+    borderTopColor: colors.neutral[200],
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    ...shadows.md,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: spacing.sm,
+  },
+  textInput: {
+    flex: 1,
+    maxHeight: 120,
+    backgroundColor: colors.background.default,
+  },
+  inputContent: {
+    ...typography.body1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  inputOutline: {
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+  },
+  sendButton: {
+    marginBottom: spacing.xs,
+  },
+  sendIconContainer: {
+    backgroundColor: colors.primary[500],
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    minWidth: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.sm,
+  },
+  sendIconDisabled: {
+    backgroundColor: colors.neutral[300],
+  },
+  sendButtonDisabled: {
+    opacity: 0.5,
+  },
+  sendText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  charCount: {
+    textAlign: 'right',
+    marginTop: spacing.xs,
+    marginRight: spacing.sm,
+  },
+});
 
 /**
  * ChatInput organism component for sending messages
@@ -79,10 +137,10 @@ function ChatInput({
           mode="outlined"
           theme={{
             colors: {
-              outline: theme.colors.neutral[300],
-              outlineVariant: theme.colors.neutral[200],
-              onSurfaceVariant: theme.colors.text.secondary,
-              onSurface: theme.colors.text.primary,
+              outline: colors.neutral[300],
+              outlineVariant: colors.neutral[200],
+              onSurfaceVariant: colors.text.secondary,
+              onSurface: colors.text.primary,
             }
           }}
           accessibilityLabel="Message input"
@@ -134,64 +192,6 @@ function ChatInput({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: theme.colors.background.default,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.neutral[200],
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-    ...theme.shadows.md,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: theme.spacing.sm,
-  },
-  textInput: {
-    flex: 1,
-    maxHeight: 120,
-    backgroundColor: theme.colors.background.default,
-  },
-  inputContent: {
-    ...theme.typography.body1,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-  },
-  inputOutline: {
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-  },
-  sendButton: {
-    marginBottom: theme.spacing.xs,
-  },
-  sendIconContainer: {
-    backgroundColor: theme.colors.primary[500],
-    borderRadius: theme.borderRadius.full,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-    minWidth: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...theme.shadows.sm,
-  },
-  sendIconDisabled: {
-    backgroundColor: theme.colors.neutral[300],
-  },
-  sendButtonDisabled: {
-    opacity: 0.5,
-  },
-  sendText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  charCount: {
-    textAlign: 'right',
-    marginTop: theme.spacing.xs,
-    marginRight: theme.spacing.sm,
-  },
-});
 
 ChatInput.propTypes = {
   onSend: PropTypes.func.isRequired,

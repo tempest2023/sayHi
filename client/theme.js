@@ -192,22 +192,21 @@ export const sizes = {
   }
 };
 
-// Enhanced theme object
+// Enhanced theme object, provide some shortcuts for style.
 const theme = {
   ...MD3LightTheme,
   colors: {
     ...MD3LightTheme.colors,
     primary: colors.primary[500],
     secondary: colors.secondary[500],
-    surface: colors.background.default,
+    neutral: colors.neutral[500],
+    semantic: colors.semantic[500],
     background: colors.background.default,
     error: colors.semantic.error,
     onPrimary: colors.text.inverse,
     onSecondary: colors.text.inverse,
     onSurface: colors.text.primary,
     onBackground: colors.text.primary,
-    // Custom color additions
-    ...colors
   },
   typography,
   spacing,

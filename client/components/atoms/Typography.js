@@ -1,7 +1,24 @@
 import React, { memo } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../../theme';
+import { typography, colors } from '../../theme';
+
+// Move styles above the Typography component definition
+const styles = StyleSheet.create({
+  base: {},
+  center: {
+    textAlign: 'center',
+  },
+  h1: { ...typography.h1, color: colors.text.primary },
+  h2: { ...typography.h2, color: colors.text.primary },
+  h3: { ...typography.h3, color: colors.text.primary },
+  h4: { ...typography.h4, color: colors.text.primary },
+  body1: { ...typography.body1, color: colors.text.primary },
+  body2: { ...typography.body2, color: colors.text.primary },
+  caption: { ...typography.caption, color: colors.text.secondary },
+  button: { ...typography.button, color: colors.text.primary },
+  overline: { ...typography.overline, color: colors.text.secondary },
+});
 
 /**
  * Typography component that provides consistent text styling throughout the app
@@ -23,8 +40,8 @@ function Typography({
 }) {
   const textStyle = [
     styles.base,
-    theme.typography[variant],
-    { color: theme.colors.text[color] },
+    typography[variant],
+    { color: colors.text[color] },
     center && styles.center,
     style
   ];
@@ -44,15 +61,6 @@ function Typography({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  base: {
-    includeFontPadding: false, // Android specific - removes extra padding
-  },
-  center: {
-    textAlign: 'center',
-  }
-});
 
 Typography.propTypes = {
   variant: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'body1', 'body2', 'caption', 'button', 'overline']),

@@ -1,5 +1,5 @@
-import React, { memo, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, memo } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
@@ -7,7 +7,28 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import Paragraph from '../components/Paragraph';
 import checkUserAuth from '../apis/checkUserAuth';
-import theme from '../theme';
+import { spacing, colors } from '../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background.default,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+  },
+  title: {
+    marginBottom: spacing.lg,
+  },
+  description: {
+    marginBottom: spacing.xl,
+  },
+  loginButton: {
+    marginBottom: spacing.md,
+  },
+  signupButton: {
+    marginBottom: spacing.md,
+  },
+});
 
 function HomeScreen({ navigation }) {
 
@@ -54,25 +75,6 @@ function HomeScreen({ navigation }) {
     </Background>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: theme.colors.background.default,
-  },
-  title: {
-    marginBottom: theme.spacing.lg,
-  },
-  description: {
-    marginBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.lg,
-  },
-  loginButton: {
-    marginBottom: theme.spacing.md,
-  },
-  signupButton: {
-    // Outlined button styling handled by Button component
-  },
-});
 
 HomeScreen.propTypes = {
   navigation: PropTypes.object.isRequired,

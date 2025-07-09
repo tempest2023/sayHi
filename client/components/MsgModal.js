@@ -1,30 +1,31 @@
+/* eslint-disable import/no-named-as-default-member */
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Dialog, Portal, Paragraph, Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import theme from '../theme';
+import { colors } from '../theme';
 
 const styles = StyleSheet.create({
   normal: {
     backgroundColor: 'white',
-    color: theme.colors.primary,
+    color: colors.primary,
     padding: 5,
     margin: 5,
   },
   warn: {
     backgroundColor: '#ffc400',
-    color: theme.colors.primary,
+    color: colors.primary,
     padding: 5,
     margin: 5
   },
   error: {
     backgroundColor: '#f00f00',
-    color: theme.colors.primary,
+    color: colors.primary,
     padding: 5,
     margin: 5
   },
   okText: {
-    color: theme.colors.secondary,
+    color: colors.secondary,
   }
 });
 

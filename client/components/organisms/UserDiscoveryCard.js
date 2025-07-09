@@ -5,7 +5,67 @@ import PropTypes from 'prop-types';
 import Avatar from '../atoms/Avatar';
 import Typography from '../atoms/Typography';
 import Button from '../Button';
-import theme from '../../theme';
+import { colors, spacing, borderRadius, shadows } from '../../theme';
+
+const styles = StyleSheet.create({
+  card: {
+    width: '90%',
+    maxWidth: 400,
+    backgroundColor: colors.background.default,
+    ...shadows.md,
+    borderRadius: borderRadius.xl,
+  },
+  content: {
+    alignItems: 'center',
+    paddingVertical: spacing.xl,
+  },
+  avatar: {
+    marginBottom: spacing.lg,
+  },
+  name: {
+    marginBottom: spacing.sm,
+  },
+  username: {
+    marginBottom: spacing.lg,
+  },
+  infoSection: {
+    width: '100%',
+    marginTop: spacing.lg,
+  },
+  sectionTitle: {
+    marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  infoItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.neutral[200],
+  },
+  infoLabel: {
+    flex: 1,
+  },
+  infoValue: {
+    flex: 2,
+    textAlign: 'right',
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    gap: spacing.md,
+  },
+  skipButton: {
+    flex: 1,
+  },
+  chatButton: {
+    flex: 1,
+  },
+});
 
 /**
  * UserDiscoveryCard organism component for displaying discoverable users
@@ -137,66 +197,6 @@ function UserInfoItem({ label, value }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    width: '90%',
-    maxWidth: 400,
-    backgroundColor: theme.colors.background.default,
-    ...theme.shadows.md,
-    borderRadius: theme.borderRadius.xl,
-  },
-  content: {
-    alignItems: 'center',
-    paddingVertical: theme.spacing.xl,
-  },
-  avatar: {
-    marginBottom: theme.spacing.lg,
-  },
-  name: {
-    marginBottom: theme.spacing.sm,
-  },
-  username: {
-    marginBottom: theme.spacing.lg,
-  },
-  infoSection: {
-    width: '100%',
-    marginTop: theme.spacing.lg,
-  },
-  sectionTitle: {
-    marginBottom: theme.spacing.md,
-    textAlign: 'center',
-  },
-  infoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.neutral[200],
-  },
-  infoLabel: {
-    flex: 1,
-  },
-  infoValue: {
-    flex: 2,
-    textAlign: 'right',
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    gap: theme.spacing.md,
-  },
-  skipButton: {
-    flex: 1,
-  },
-  chatButton: {
-    flex: 1,
-  },
-});
 
 UserDiscoveryCard.propTypes = {
   user: PropTypes.shape({

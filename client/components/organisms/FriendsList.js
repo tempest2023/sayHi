@@ -5,7 +5,37 @@ import PropTypes from 'prop-types';
 import ChatListItem from '../molecules/ChatListItem';
 import EmptyState from '../molecules/EmptyState';
 import Typography from '../atoms/Typography';
-import theme from '../../theme';
+import { colors, spacing, sizes } from '../../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background.default,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background.default,
+    paddingHorizontal: spacing.xl,
+  },
+  list: {
+    flex: 1,
+    backgroundColor: colors.background.default,
+  },
+  emptyContentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.neutral[200],
+    marginLeft: spacing.md + sizes.avatar.lg + spacing.md, // Align with text
+  },
+  loadingText: {
+    marginTop: spacing.md,
+  },
+});
 
 /**
  * FriendsList organism component with optimized FlatList rendering
@@ -60,7 +90,7 @@ function FriendsList({
   if (loading && !refreshing) {
     return (
       <View style={[styles.centerContainer, style]}>
-        <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+        <ActivityIndicator size="large" color={colors.primary[500]} />
         <Typography
           variant="body1"
           color="secondary"
@@ -119,7 +149,7 @@ function FriendsList({
       showsVerticalScrollIndicator={false}
       style={[styles.list, style]}
       contentContainerStyle={friends.length === 0 ? styles.emptyContentContainer : undefined}
-      removeClippedSubviews={true}
+      removeClippedSubviews
       maxToRenderPerBatch={10}
       updateCellsBatchingPeriod={50}
       initialNumToRender={15}
@@ -133,36 +163,6 @@ function FriendsList({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background.default,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.background.default,
-    paddingHorizontal: theme.spacing.xl,
-  },
-  list: {
-    flex: 1,
-    backgroundColor: theme.colors.background.default,
-  },
-  emptyContentContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: theme.colors.neutral[200],
-    marginLeft: theme.spacing.md + theme.sizes.avatar.lg + theme.spacing.md, // Align with text
-  },
-  loadingText: {
-    marginTop: theme.spacing.md,
-  },
-});
 
 FriendsList.propTypes = {
   friends: PropTypes.arrayOf(PropTypes.shape({

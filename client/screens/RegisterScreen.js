@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
-import theme from '../theme';
+import { colors } from '../theme';
 import {
   emailValidator,
   passwordValidator,
@@ -17,7 +17,7 @@ import registry from '../apis/registry';
 
 const styles = StyleSheet.create({
   label: {
-    color: theme.colors.secondary,
+    color: colors.secondary,
   },
   button: {
     marginTop: 24,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    color: colors.primary,
   },
 });
 

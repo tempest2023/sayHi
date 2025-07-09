@@ -3,7 +3,50 @@ import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Avatar from '../atoms/Avatar';
 import Typography from '../atoms/Typography';
-import theme from '../../theme';
+import { spacing, borderRadius, colors, shadows } from '../../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+  },
+  ownMessage: {
+    justifyContent: 'flex-end',
+    flexDirection: 'row-reverse',
+  },
+  otherMessage: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+  },
+  avatar: {
+    marginHorizontal: spacing.sm,
+  },
+  bubble: {
+    maxWidth: '70%',
+    borderRadius: borderRadius.lg,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  ownBubble: {
+    backgroundColor: colors.primary[500],
+    borderBottomRightRadius: borderRadius.sm,
+  },
+  otherBubble: {
+    backgroundColor: colors.neutral[100],
+    borderBottomLeftRadius: borderRadius.sm,
+  },
+  messageText: {
+    textAlign: 'left',
+  },
+  timestamp: {
+    marginTop: spacing.xs,
+    textAlign: 'right',
+    opacity: 0.7,
+    fontSize: 10,
+  },
+});
 
 /**
  * MessageBubble component for displaying individual chat messages
@@ -48,7 +91,7 @@ function MessageBubble({
         style={[
           styles.bubble,
           isOwn ? styles.ownBubble : styles.otherBubble,
-          theme.shadows.sm
+          shadows.sm
         ]}
         accessibilityRole="text"
         accessibilityLabel={`Message from ${displayName}: ${message.text}`}
@@ -67,7 +110,7 @@ function MessageBubble({
             color={isOwn ? "inverse" : "secondary"}
             style={styles.timestamp}
           >
-            {new Date(parseInt(message.time)).toLocaleTimeString([], {
+            {new Date(parseInt(message.time, 10)).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit'
             })}
@@ -86,49 +129,6 @@ function MessageBubble({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginVertical: theme.spacing.xs,
-    paddingHorizontal: theme.spacing.md,
-  },
-  ownMessage: {
-    justifyContent: 'flex-end',
-    flexDirection: 'row-reverse',
-  },
-  otherMessage: {
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-  },
-  avatar: {
-    marginHorizontal: theme.spacing.sm,
-  },
-  bubble: {
-    maxWidth: '70%',
-    borderRadius: theme.borderRadius.lg,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-  },
-  ownBubble: {
-    backgroundColor: theme.colors.primary[500],
-    borderBottomRightRadius: theme.borderRadius.sm,
-  },
-  otherBubble: {
-    backgroundColor: theme.colors.neutral[100],
-    borderBottomLeftRadius: theme.borderRadius.sm,
-  },
-  messageText: {
-    textAlign: 'left',
-  },
-  timestamp: {
-    marginTop: theme.spacing.xs,
-    textAlign: 'right',
-    opacity: 0.7,
-    fontSize: 10,
-  },
-});
 
 MessageBubble.propTypes = {
   message: PropTypes.shape({

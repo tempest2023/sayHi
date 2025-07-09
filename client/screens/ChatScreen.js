@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Background from '../components/Background';
 import Header from '../components/Header';
@@ -7,20 +7,20 @@ import MessageList from '../components/organisms/MessageList';
 import ChatInput from '../components/organisms/ChatInput';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import useChat from '../hooks/useChat';
-import theme from '../theme';
+import { colors, spacing, shadows } from '../theme';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background.default,
+    backgroundColor: colors.background.default,
   },
   header: {
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.neutral[200],
-    backgroundColor: theme.colors.background.default,
-    ...theme.shadows.sm,
+    borderBottomColor: colors.neutral[200],
+    backgroundColor: colors.background.default,
+    ...shadows.sm,
   },
   messageList: {
     flex: 1,
@@ -82,7 +82,7 @@ function ChatScreen({ navigation, route }) {
         showModal(setVisible);
       }
       return success;
-    } catch (error) {
+    } catch (err) {
       setModalTitle('Error');
       setModalMessage('Failed to send message. Please try again.');
       showModal(setVisible);

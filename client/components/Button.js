@@ -1,8 +1,51 @@
+/* eslint-disable import/no-named-as-default-member */
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import theme from '../theme';
+import { colors, spacing, borderRadius, shadows, sizes, typography } from '../theme';
+
+const styles = StyleSheet.create({
+  base: {
+    borderRadius: borderRadius.md,
+    minHeight: sizes.touch.comfortable,
+    justifyContent: 'center',
+    marginVertical: spacing.sm,
+  },
+  small: {
+    paddingHorizontal: spacing.md,
+    minHeight: sizes.touch.min,
+  },
+  medium: {
+    paddingHorizontal: spacing.lg,
+    minHeight: sizes.touch.comfortable,
+    minWidth: 120,
+  },
+  large: {
+    paddingHorizontal: spacing.xl,
+    minHeight: sizes.touch.large,
+    minWidth: 160,
+  },
+  fullWidth: {
+    width: '100%',
+  },
+  contained: {
+    backgroundColor: colors.primary,
+    ...shadows.sm,
+  },
+  outlined: {
+    backgroundColor: colors.background.default,
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
+  text: {
+    backgroundColor: 'transparent',
+  },
+  label: {
+    fontWeight: '600',
+    textTransform: 'none', // Override default uppercase
+  },
+});
 
 /**
  * Enhanced Button component following design system
@@ -33,9 +76,9 @@ function Button({
   ];
 
   const labelStyles = [
-    theme.typography.button,
+    typography.button,
     styles.label,
-    mode === 'text' && { color: theme.colors.primary[500] },
+    mode === 'text' && { color: colors.primary },
   ];
 
   return (
@@ -49,48 +92,6 @@ function Button({
     </PaperButton>
   );
 }
-
-const styles = StyleSheet.create({
-  base: {
-    borderRadius: theme.borderRadius.md,
-    minHeight: theme.sizes.touch.comfortable,
-    justifyContent: 'center',
-    marginVertical: theme.spacing.sm,
-  },
-  small: {
-    paddingHorizontal: theme.spacing.md,
-    minHeight: theme.sizes.touch.min,
-  },
-  medium: {
-    paddingHorizontal: theme.spacing.lg,
-    minHeight: theme.sizes.touch.comfortable,
-    minWidth: 120,
-  },
-  large: {
-    paddingHorizontal: theme.spacing.xl,
-    minHeight: theme.sizes.touch.large,
-    minWidth: 160,
-  },
-  fullWidth: {
-    width: '100%',
-  },
-  contained: {
-    backgroundColor: theme.colors.primary[500],
-    ...theme.shadows.sm,
-  },
-  outlined: {
-    backgroundColor: theme.colors.background.default,
-    borderWidth: 1,
-    borderColor: theme.colors.primary[500],
-  },
-  text: {
-    backgroundColor: 'transparent',
-  },
-  label: {
-    fontWeight: '600',
-    textTransform: 'none', // Override default uppercase
-  },
-});
 
 Button.propTypes = {
   mode: PropTypes.oneOf(['text', 'outlined', 'contained']),

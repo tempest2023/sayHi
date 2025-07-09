@@ -1,7 +1,19 @@
+/* eslint-disable import/no-named-as-default-member */
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../theme';
+import { colors, spacing, typography } from '../theme';
+
+const styles = StyleSheet.create({
+  base: {
+    color: colors.primary,
+    paddingVertical: spacing.md,
+    includeFontPadding: false,
+  },
+  center: {
+    textAlign: 'center',
+  },
+});
 
 /**
  * Header component using design system typography
@@ -21,7 +33,7 @@ function Header({
 }) {
   const headerStyle = [
     styles.base,
-    theme.typography[variant],
+    typography[variant],
     center && styles.center,
     style
   ];
@@ -36,17 +48,6 @@ function Header({
     </Text>
   );
 }
-
-const styles = StyleSheet.create({
-  base: {
-    color: theme.colors.primary[500],
-    paddingVertical: theme.spacing.md,
-    includeFontPadding: false,
-  },
-  center: {
-    textAlign: 'center',
-  },
-});
 
 Header.propTypes = {
   variant: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4']),

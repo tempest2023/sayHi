@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Background from '../components/Background';
 import TabNavigation from '../components/TabNavigation';
@@ -7,7 +7,19 @@ import FriendsList from '../components/organisms/FriendsList';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import useFriends from '../hooks/useFriends';
 import tabs from './tabs';
-import theme from '../theme';
+import { colors, spacing } from '../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background.default,
+  },
+  friendsList: {
+    flex: 1,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.lg,
+  },
+});
 
 /**
  * Refactored FriendScreen with clean architecture:
@@ -109,17 +121,6 @@ function FriendScreen({ navigation }) {
   );
 }
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background.default,
-  },
-  friendsList: {
-    flex: 1,
-    marginBottom: 80, // Account for tab navigation
-  },
-});
 
 FriendScreen.propTypes = {
   navigation: PropTypes.object.isRequired,

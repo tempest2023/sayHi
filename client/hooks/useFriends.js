@@ -70,16 +70,12 @@ function useFriends() {
   /**
    * Get friend by user ID
    */
-  const getFriendById = useCallback((userId) => {
-    return friends.find(friend => friend.userid === userId);
-  }, [friends]);
+  const getFriendById = useCallback((userId) => friends.find(friend => friend.userid === userId), [friends]);
 
   /**
    * Check if user is in friends list
    */
-  const isFriend = useCallback((userId) => {
-    return friends.some(friend => friend.userid === userId);
-  }, [friends]);
+  const isFriend = useCallback((userId) => friends.some(friend => friend.userid === userId), [friends]);
 
   // Load friends on mount
   useEffect(() => {

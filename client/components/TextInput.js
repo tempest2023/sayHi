@@ -1,8 +1,54 @@
+/* eslint-disable import/no-named-as-default-member */
 import React, { memo } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TextInput as Input } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import theme from '../theme';
+import { colors, spacing, borderRadius, sizes, typography } from '../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
+  small: {
+    marginVertical: spacing.xs,
+  },
+  medium: {
+    marginVertical: spacing.sm,
+  },
+  large: {
+    marginVertical: spacing.md,
+  },
+  label: {
+    ...typography.body2,
+    color: colors.text.secondary,
+    marginBottom: spacing.xs,
+    marginLeft: spacing.xs,
+  },
+  input: {
+    backgroundColor: colors.background.default,
+    minHeight: sizes.touch.comfortable,
+  },
+  multiline: {
+    minHeight: 80,
+  },
+  inputError: {
+    borderColor: colors.semantic.error,
+  },
+  inputContent: {
+    ...typography.body1,
+    paddingHorizontal: spacing.md,
+  },
+  outline: {
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+  },
+  error: {
+    ...typography.caption,
+    color: colors.semantic.error,
+    marginTop: spacing.xs,
+    marginLeft: spacing.xs,
+  },
+});
 
 /**
  * Enhanced TextInput component using design system
@@ -47,19 +93,19 @@ function TextInput({
       
       <Input
         style={textInputStyle}
-        selectionColor={theme.colors.primary[500]}
+        selectionColor={colors.primary}
         underlineColor="transparent"
-        activeUnderlineColor={theme.colors.primary[500]}
-        outlineColor={errorText ? theme.colors.semantic.error : theme.colors.neutral[300]}
-        activeOutlineColor={errorText ? theme.colors.semantic.error : theme.colors.primary[500]}
+        activeUnderlineColor={colors.primary}
+        outlineColor={errorText ? colors.semantic.error : colors.neutral[300]}
+        activeOutlineColor={errorText ? colors.semantic.error : colors.primary}
         mode="outlined"
         multiline={multiline}
         contentStyle={styles.inputContent}
         outlineStyle={styles.outline}
         theme={{
           colors: {
-            onSurfaceVariant: theme.colors.text.secondary,
-            onSurface: theme.colors.text.primary,
+            onSurfaceVariant: colors.text.secondary,
+            onSurface: colors.text.primary,
           }
         }}
         accessibilityLabel={label}
@@ -75,51 +121,6 @@ function TextInput({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-  small: {
-    marginVertical: theme.spacing.xs,
-  },
-  medium: {
-    marginVertical: theme.spacing.sm,
-  },
-  large: {
-    marginVertical: theme.spacing.md,
-  },
-  label: {
-    ...theme.typography.body2,
-    color: theme.colors.text.secondary,
-    marginBottom: theme.spacing.xs,
-    marginLeft: theme.spacing.xs,
-  },
-  input: {
-    backgroundColor: theme.colors.background.default,
-    minHeight: theme.sizes.touch.comfortable,
-  },
-  multiline: {
-    minHeight: 80,
-  },
-  inputError: {
-    borderColor: theme.colors.semantic.error,
-  },
-  inputContent: {
-    ...theme.typography.body1,
-    paddingHorizontal: theme.spacing.md,
-  },
-  outline: {
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-  },
-  error: {
-    ...theme.typography.caption,
-    color: theme.colors.semantic.error,
-    marginTop: theme.spacing.xs,
-    marginLeft: theme.spacing.xs,
-  },
-});
 
 TextInput.propTypes = {
   label: PropTypes.string,

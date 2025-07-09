@@ -3,7 +3,31 @@ import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Typography from '../atoms/Typography';
 import Button from '../Button'; // Using existing button component
-import theme from '../../theme';
+import { spacing } from '../../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xxl,
+  },
+  iconContainer: {
+    marginBottom: spacing.lg,
+  },
+  title: {
+    marginBottom: spacing.md,
+  },
+  description: {
+    marginBottom: spacing.xl,
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  action: {
+    marginTop: spacing.md,
+  },
+});
 
 /**
  * EmptyState component for displaying empty states with optional action
@@ -63,30 +87,6 @@ function EmptyState({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.xxl,
-  },
-  iconContainer: {
-    marginBottom: theme.spacing.lg,
-  },
-  title: {
-    marginBottom: theme.spacing.md,
-  },
-  description: {
-    marginBottom: theme.spacing.xl,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  action: {
-    marginTop: theme.spacing.md,
-  },
-});
 
 EmptyState.propTypes = {
   icon: PropTypes.string,

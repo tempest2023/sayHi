@@ -2,10 +2,9 @@ import React, { useState, memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import theme from '../theme';
+import { colors } from '../theme';
 
 const ScreenWidth = Dimensions.get('window').width;
-
 const tabBackgroundColor = '#eee';
 
 const styles = StyleSheet.create({
@@ -24,7 +23,7 @@ const styles = StyleSheet.create({
     width: '100%',
     margin: 5,
     marginBottom: 40,
-    backgroundColor: tabBackgroundColor,
+    backgroundColor: colors.primary,
   },
   tabItem: {
     flex: 1,
@@ -50,17 +49,17 @@ const styles = StyleSheet.create({
   },
   activeTabIcon: {
     marginBottom: 5,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: colors.primary,
   },
   tabText: {
     color: '#555',
     fontSize: 12,
   },
   activeTabText: {
-    color: theme.colors.primary,
+    color: colors.primary,
     fontSize: 12,
   }
-})
+});
 
 function TabNavigation({ navigation, tabs, active }) {
   const [tabItems, setTabItems] = useState([]);

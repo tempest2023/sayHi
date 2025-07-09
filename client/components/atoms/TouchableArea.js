@@ -1,7 +1,20 @@
 import React, { memo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../../theme';
+import { sizes } from '../../theme';
+
+// Move styles above the TouchableArea component definition
+const styles = StyleSheet.create({
+  touchable: {
+    minHeight: sizes.touch.min,
+    minWidth: sizes.touch.min,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  disabled: {
+    opacity: 0.5,
+  }
+});
 
 /**
  * TouchableArea component that ensures proper accessibility and touch targets
@@ -27,7 +40,7 @@ function TouchableArea({
   children,
   ...props
 }) {
-  const minHeight = theme.sizes.touch[touchSize];
+  const minHeight = sizes.touch[touchSize];
   
   return (
     <TouchableOpacity
@@ -37,7 +50,7 @@ function TouchableArea({
       accessibilityHint={accessibilityHint}
       accessibilityRole={accessibilityRole}
       style={[
-        styles.touchArea,
+        styles.touchable,
         { minHeight },
         disabled && styles.disabled,
         style
@@ -49,16 +62,6 @@ function TouchableArea({
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  touchArea: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  disabled: {
-    opacity: 0.5,
-  }
-});
 
 TouchableArea.propTypes = {
   onPress: PropTypes.func.isRequired,

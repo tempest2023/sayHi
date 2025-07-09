@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import Background from '../components/Background';
@@ -12,54 +12,58 @@ import TabNavigation from '../components/TabNavigation';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import useProfile from '../hooks/useProfile';
 import tabs from './tabs';
-import theme from '../theme';
+import { spacing, shadows, colors } from '../theme';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background.default,
+    backgroundColor: colors.background.default,
+    paddingHorizontal: spacing.xl,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
+    paddingHorizontal: spacing.xl,
   },
   loadingText: {
-    marginTop: theme.spacing.md,
+    marginTop: spacing.md,
   },
   profileHeader: {
     alignItems: 'center',
-    paddingVertical: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.md,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.neutral[200],
-    backgroundColor: theme.colors.background.default,
-    ...theme.shadows.sm,
+    borderBottomColor: colors.neutral[200],
+    backgroundColor: colors.background.default,
+    ...shadows.sm,
   },
   avatar: {
-    marginBottom: theme.spacing.md,
+    marginBottom: spacing.md,
   },
   headerTitle: {
-    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: spacing.sm,
   },
   form: {
     flex: 1,
-    paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.lg,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.lg,
   },
   input: {
-    marginBottom: theme.spacing.sm,
+    marginBottom: spacing.sm,
   },
   actions: {
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.lg,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.neutral[200],
-    backgroundColor: theme.colors.background.default,
-    gap: theme.spacing.md,
+    borderTopColor: colors.neutral[200],
+    backgroundColor: colors.background.default,
+    gap: spacing.md,
   },
   saveButton: {
+    marginTop: spacing.md,
     // Primary button styling handled by Button component
   },
   logoutButton: {
@@ -149,7 +153,7 @@ function ProfileScreen({ navigation }) {
     return (
       <Background style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+          <ActivityIndicator size="large" color={colors.primary[500]} />
           <Typography
             variant="body1"
             color="secondary"

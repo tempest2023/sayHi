@@ -5,7 +5,32 @@ import PropTypes from 'prop-types';
 import MessageBubble from '../molecules/MessageBubble';
 import EmptyState from '../molecules/EmptyState';
 import Typography from '../atoms/Typography';
-import theme from '../../theme';
+import { colors, spacing } from '../../theme';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background.default,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background.default,
+    paddingHorizontal: spacing.xl,
+  },
+  list: {
+    flex: 1,
+    backgroundColor: colors.background.default,
+  },
+  listContent: {
+    paddingVertical: spacing.md,
+    flexGrow: 1,
+  },
+  loadingText: {
+    marginTop: spacing.md,
+  },
+});
 
 /**
  * MessageList organism component with optimized FlatList rendering for chat messages
@@ -54,7 +79,7 @@ function MessageList({
   if (loading && messages.length === 0) {
     return (
       <View style={[styles.centerContainer, style]}>
-        <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+        <ActivityIndicator size="large" color={colors.primary[500]} />
         <Typography
           variant="body1"
           color="secondary"
@@ -111,7 +136,7 @@ function MessageList({
       style={[styles.list, style]}
       contentContainerStyle={styles.listContent}
       inverted={false} // Keep messages in chronological order
-      removeClippedSubviews={true}
+      removeClippedSubviews
       maxToRenderPerBatch={20}
       updateCellsBatchingPeriod={50}
       initialNumToRender={20}
@@ -125,31 +150,6 @@ function MessageList({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background.default,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.background.default,
-    paddingHorizontal: theme.spacing.xl,
-  },
-  list: {
-    flex: 1,
-    backgroundColor: theme.colors.background.default,
-  },
-  listContent: {
-    paddingVertical: theme.spacing.md,
-    flexGrow: 1,
-  },
-  loadingText: {
-    marginTop: theme.spacing.md,
-  },
-});
 
 MessageList.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape({

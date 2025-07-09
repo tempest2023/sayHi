@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Background from '../components/Background';
@@ -55,9 +55,9 @@ function ChatScreen({ navigation, route }) {
   } = useChat(userid);
 
   // Modal state for error handling
-  const [visible, setVisible] = React.useState(false);
-  const [modalTitle, setModalTitle] = React.useState('');
-  const [modalMessage, setModalMessage] = React.useState('');
+  const [visible, setVisible] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   /**
    * Validate route params on mount
@@ -158,6 +158,6 @@ function ChatScreen({ navigation, route }) {
 ChatScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-}
+};
 
 export default memo(ChatScreen);

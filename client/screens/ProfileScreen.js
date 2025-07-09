@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import PropTypes from 'prop-types';
@@ -89,9 +89,9 @@ function ProfileScreen({ navigation }) {
   } = useProfile();
 
   // Modal state for feedback
-  const [visible, setVisible] = React.useState(false);
-  const [modalTitle, setModalTitle] = React.useState('');
-  const [modalMessage, setModalMessage] = React.useState('');
+  const [visible, setVisible] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   /**
    * Handle authentication failure
@@ -276,6 +276,6 @@ function ProfileScreen({ navigation }) {
 
 ProfileScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-}
+};
 
 export default memo(ProfileScreen);

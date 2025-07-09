@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
@@ -46,9 +46,9 @@ function PickScreen({ navigation }) {
   } = useDiscovery();
 
   // Modal state for error handling
-  const [visible, setVisible] = React.useState(false);
-  const [modalTitle, setModalTitle] = React.useState('');
-  const [modalMessage, setModalMessage] = React.useState('');
+  const [visible, setVisible] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
 
   /**
    * Handle chat navigation
@@ -175,7 +175,7 @@ function PickScreen({ navigation }) {
 }
 
 PickScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
-}
+  navigation: PropTypes.object.isRequired,
+};
 
 export default memo(PickScreen);

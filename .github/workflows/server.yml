@@ -70,9 +70,4 @@ jobs:
       run: |
         cd server
         npm run ci
-
-    - name: Run Development
-      run: |
-        cd server
-        npm run dev
     

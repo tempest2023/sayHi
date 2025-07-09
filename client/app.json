@@ -20,7 +20,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tar118.sayhi"
+      "bundleIdentifier": "com.tar118.sayhi",
+      "icon": "./assets/logo.png"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +30,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.ico"
+      "favicon": "./assets/logo.png"
     },
     "extra": {
       "eas": {

@@ -16,7 +16,7 @@ B. Set the mysql setting in `/server/config/config.default.js` to remote mysql s
 C. Build mysql docker image
 
 ```shell
-# ./Dockerfile
+# Dockerfile is in root directory, not /server
 docker build -t sayhi-mysql .
 
 # run mysql docker

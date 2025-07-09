@@ -4,14 +4,13 @@
 
 CREATE TABLE IF NOT EXISTS public.sayhi_message
 (
-    id bigint NOT NULL,
+    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     userid character varying(64) COLLATE pg_catalog."default",
     message text COLLATE pg_catalog."default",
     receiver_userid character varying(64) COLLATE pg_catalog."default",
     create_time character varying COLLATE pg_catalog."default",
     retrieve_time character varying(13) COLLATE pg_catalog."default",
-    edit_time character varying(13) COLLATE pg_catalog."default",
-    CONSTRAINT sayhi_message_pkey PRIMARY KEY (id)
+    edit_time character varying(13) COLLATE pg_catalog."default"
 )
 
 TABLESPACE pg_default;
@@ -45,7 +44,7 @@ CREATE INDEX IF NOT EXISTS fki_sayhi_message_userid_fkey
 
 CREATE TABLE IF NOT EXISTS public.sayhi_user
 (
-    id integer NOT NULL,
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username character varying(100) COLLATE pg_catalog."default",
     password character varying(128) COLLATE pg_catalog."default",
     realname character varying(100) COLLATE pg_catalog."default",
@@ -57,7 +56,6 @@ CREATE TABLE IF NOT EXISTS public.sayhi_user
     status character varying(20) COLLATE pg_catalog."default",
     create_time character varying(13) COLLATE pg_catalog."default",
     edit_time character varying(13) COLLATE pg_catalog."default",
-    CONSTRAINT sayhi_user_pkey PRIMARY KEY (id),
     CONSTRAINT sayhi_user_email_ukey UNIQUE (email)
         INCLUDE(email),
     CONSTRAINT sayhi_user_userid_ukey UNIQUE (userid)

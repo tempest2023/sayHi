@@ -3,7 +3,7 @@
 DROP TABLE IF EXISTS sayhi_message;
 
 CREATE TABLE IF NOT EXISTS sayhi_message (
-    id BIGINT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     userid VARCHAR(64),
     message TEXT,
     receiver_userid VARCHAR(64),
@@ -22,7 +22,7 @@ CREATE INDEX idx_sayhi_message_userid ON sayhi_message (userid);
 DROP TABLE IF EXISTS sayhi_user;
 
 CREATE TABLE IF NOT EXISTS sayhi_user (
-    id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(100),
     password VARCHAR(128),
     realname VARCHAR(100),

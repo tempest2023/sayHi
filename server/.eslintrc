@@ -1,4 +1,7 @@
 {
   "extends": "koa",
-  "root": true
+  "root": true,
+  "rules": {
+    "camelcase": "warn"
+  }
 }

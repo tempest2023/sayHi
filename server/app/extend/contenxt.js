@@ -9,5 +9,5 @@ module.exports = {
       this[UA] = useragent.parse(uaString);
     }
     return this[UA];
-  },
+  }
 };

@@ -10,7 +10,7 @@ class MessageController extends BaseController {
    */
   async index() {
     const { ctx } = this;
-    const { start = 0, end = 10, sort = [ 'create_time', 'ASC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 10, sort = ['create_time', 'ASC'], filter = {} } = ctx.request.body;
     // only can query the messages belong to this user.
     filter.userid = ctx.request.header['x-userid'];
     const res = await ctx.service.message.queryAll({ start, end, sort, filter });
@@ -21,7 +21,7 @@ class MessageController extends BaseController {
     }
     return (ctx.body = {
       errno: 0,
-      ...res,
+      ...res
     });
   }
 
@@ -30,7 +30,7 @@ class MessageController extends BaseController {
    */
   async new() {
     const { ctx } = this;
-    const { start = 0, end = 1, sort = [ 'create_time', 'DESC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 1, sort = ['create_time', 'DESC'], filter = {} } = ctx.request.body;
     // only can query the messages belong to this user as sender.
     filter.userid = ctx.request.header['x-userid'];
     const res = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.SENDER);
@@ -41,7 +41,7 @@ class MessageController extends BaseController {
     }
     return (ctx.body = {
       errno: 0,
-      ...res,
+      ...res
     });
   }
 
@@ -52,9 +52,9 @@ class MessageController extends BaseController {
   async show() {
     const { ctx } = this;
     const receiver_userid = this.getUserId();
-    const { start = 0, end = 10, sort = [ 'create_time', 'ASC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 10, sort = ['create_time', 'ASC'], filter = {} } = ctx.request.body;
     const createRule = {
-      receiver_userid: { type: 'string' },
+      receiver_userid: { type: 'string' }
     };
     ctx.validate(createRule, { receiver_userid });
     filter.userid = ctx.request.header['x-userid'];
@@ -63,7 +63,6 @@ class MessageController extends BaseController {
     const data = await ctx.service.message.queryAll({ start, end, sort, filter }, ROLE.SENDER);
     console.log(`[controller.messages.show] ${JSON.stringify(data)}`);
     return (ctx.body = { errno: 0, ...data });
-
   }
 
   /**
@@ -74,14 +73,14 @@ class MessageController extends BaseController {
     const { ctx } = this;
     const createRule = {
       message: { type: 'string' },
-      receiver_userid: { type: 'string' },
+      receiver_userid: { type: 'string' }
     };
     ctx.validate(createRule, ctx.request.body);
     const userid = ctx.request.header['x-userid'];
     if (userid === ctx.request.body.receiver_userid) {
       return (ctx.body = {
         errno: 2004,
-        errmsg: 'cannot send message to yourself',
+        errmsg: 'cannot send message to yourself'
       });
     }
     const id = await this.ctx.service.base.count('message') + 1;
@@ -93,7 +92,7 @@ class MessageController extends BaseController {
 
   async edit() {
     return (this.ctx.body = {
-      errno: 0,
+      errno: 0
     });
   }
 
@@ -105,7 +104,7 @@ class MessageController extends BaseController {
     const { ctx } = this;
     const createRule = {
       id: { type: 'int' },
-      message: { type: 'string' },
+      message: { type: 'string' }
     };
     console.log('[controller.messages.update] ', JSON.stringify(ctx.request.body));
     ctx.validate(createRule, ctx.request.body);
@@ -113,7 +112,7 @@ class MessageController extends BaseController {
     const query = {
       userid,
       id: ctx.request.body.id,
-      message: ctx.request.body.message,
+      message: ctx.request.body.message
     };
     const data = await ctx.service.message.update(query);
     console.log(`[controller.messages.update] ${JSON.stringify(data)}`);
@@ -128,7 +127,7 @@ class MessageController extends BaseController {
     const { ctx } = this;
     const id = this.getUserId();
     const createRule = {
-      id: { type: 'string' },
+      id: { type: 'string' }
     };
     ctx.validate(createRule, { id });
     const userid = ctx.request.header['x-userid'];

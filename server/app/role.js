@@ -1,5 +1,5 @@
 const ROLE = {
   SENDER: 'sender',
-  RECEIVER: 'receiver',
+  RECEIVER: 'receiver'
 };
 module.exports = ROLE;

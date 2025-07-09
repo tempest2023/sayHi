@@ -4,18 +4,18 @@
 module.exports = {
   mysql: {
     enable: true,
-    package: 'egg-mysql',
+    package: 'egg-mysql'
   },
   cors: {
     enable: true,
-    package: 'egg-cors',
+    package: 'egg-cors'
   },
   validate: {
     enable: true,
-    package: 'egg-validate',
+    package: 'egg-validate'
   },
   redis: {
     enable: true,
-    package: 'egg-redis',
-  },
+    package: 'egg-redis'
+  }
 };

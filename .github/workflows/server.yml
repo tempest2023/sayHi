@@ -1,0 +1,73 @@
+# Server CI for Egg.js backend
+
+name: Server CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'server/**'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'server/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: 3306
+        character set server: 'utf8mb4'
+        mysql version: '5.7'
+        mysql database: 'SayHi'
+        mysql root password: 'root'
+        mysql user: 'root'
+        mysql password: 'root'
+
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.8.0
+      with:
+        redis-version: '6'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'yarn'
+        cache-dependency-path: server/yarn.lock
+
+    - name: Install dependencies
+      timeout-minutes: 10
+      run: |
+        cd server
+        yarn install
+
+    - name: Wait for MySQL
+      run: |
+        for i in {1..30}; do
+          nc -z 127.0.0.1 3306 && echo "MySQL is up" && exit 0
+          echo "Waiting for MySQL..."
+          sleep 2
+        done
+        echo "MySQL did not start in time" && exit 1
+    
+    - name: Import DB Schema
+      run: |
+        mysql -h 127.0.0.1 -u root -proot SayHi < sayhi.mysql.sql
+
+    - name: Run CI (lint + coverage)
+      run: |
+        cd server
+        npm run ci
+    

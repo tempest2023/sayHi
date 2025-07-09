@@ -24,6 +24,11 @@ Require: Android Simulator
 ## Run Web Version
 `yarn web`
 
+If you meet errors because your node version is not 16, you can add env variable like this:
+```
+NODE_OPTIONS=--openssl-legacy-provider yarn web
+```
+
 
 ## Components Library
 [react-native-paper](https://callstack.github.io/react-native-paper/getting-started.html)

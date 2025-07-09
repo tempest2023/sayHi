@@ -23,10 +23,10 @@ module.exports = appInfo => {
     //     // password
     //     password: '',
     //     // database
-    //     database: 'SayHi',
+    //     database: 'SayHi'
     //   },
     //   app: true,
-    //   agent: false,
+    //   agent: false
     // },
     mysql: {
       client: {
@@ -36,43 +36,43 @@ module.exports = appInfo => {
         port: 3306,
         // username
         user: 'root',
-        // password
-        password: '',
+        // password, default is root, change to your own password
+        password: 'root',
         // database
-        database: 'SayHi',
+        database: 'SayHi'
       },
       // load into app, default is open
       app: true,
       // load into agent, default is close
-      agent: false,
+      agent: false
     },
     redis: {
       client: {
         port: 6379, // Redis port
         host: '127.0.0.1', // Redis host
         password: '',
-        db: 0,
-      },
-    },
+        db: 0
+      }
+    }
   };
 
   config.errorHandler = {
-    match: '/',
+    match: '/'
   };
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1665788833510_9752';
 
   config.security = {
-    domainWhiteList: [ '*' ],
+    domainWhiteList: ['*'],
     csrf: {
-      enable: false,
-    },
+      enable: false
+    }
   };
   config.cors = {
     origin: '*',
     credentials: true,
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
   };
 
   config.bodyParser = {
@@ -85,8 +85,8 @@ module.exports = appInfo => {
     queryString: {
       arrayLimit: 10000,
       depth: 50,
-      parameterLimit: 10000,
-    },
+      parameterLimit: 10000
+    }
   };
 
   config.session = {
@@ -94,16 +94,16 @@ module.exports = appInfo => {
     maxAge: 30 * 24 * 3600 * 1000, // 30 days
     httpOnly: true,
     encrypt: true,
-    renew: true,
+    renew: true
   };
 
   config.validate = true;
 
   // add your middleware config here
-  config.middleware = [ 'sessionToken', 'errorHandler' ];
+  config.middleware = ['sessionToken', 'errorHandler'];
   config.appName = 'SayHi Backend';
 
   return {
-    ...config,
+    ...config
   };
 };

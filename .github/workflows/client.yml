@@ -1,0 +1,59 @@
+name: Client CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'client/**'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'client/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16'
+        cache: 'yarn'
+        cache-dependency-path: client/yarn.lock
+
+    - name: Install dependencies
+      timeout-minutes: 10
+      run: |
+        cd client
+        yarn install
+
+    - name: Lint code
+      run: |
+        cd client
+        npm run lint
+
+    - name: Build Web App
+      timeout-minutes: 3
+      run: |
+        cd client
+        npm run build
+    
+    # - name: Build iOS App
+    #   timeout-minutes: 3
+    #   run: |
+    #     cd client
+    #     npm run build:ios
+    
+    # - name: Build Android App
+    #   timeout-minutes: 3
+    #   run: |
+    #     cd client
+    #     npm run build:android

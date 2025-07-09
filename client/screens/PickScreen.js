@@ -131,7 +131,7 @@ function PickScreen({ navigation }) {
   /**
    * Render empty state (no users available)
    */
-  if (!currentUser && !loading) {
+  if (!currentUser && !loading && !error) {
     return (
       <Background position="containerCenter" style={styles.container}>
         <EmptyState

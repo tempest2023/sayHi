@@ -19,32 +19,34 @@ function useDiscovery() {
     try {
       setLoading(true);
       setError(null);
-      
+
+      const currentUserId = await getData('userid');
+      if (!currentUserId) {
+        throw new Error('User not logged in or userid not found');
+      }
+
       const res = await randomPickUp();
-      if (!res || !res.success) {
+      if (!res || !res.success || !res.data || res.data.length === 0) {
         throw new Error(res?.errmsg || 'Failed to fetch users');
       }
-      
-      const currentUserId = await getData('userid');
+
       const fetchedUser = res.data[0];
-      
-      // If we got our own profile, try again
+
       if (fetchedUser.userid === currentUserId) {
-        const nextUser = await fetchRandomUser();
-        return nextUser;
+        setCurrentUser(null);
+        return null;
       }
-      
-      // Add display name for easier use
+
       const userWithDisplayName = {
         ...fetchedUser,
         displayName: fetchedUser.realname || fetchedUser.username || 'Unknown User'
       };
-      
       setCurrentUser(userWithDisplayName);
       return userWithDisplayName;
     } catch (err) {
-      console.error('[useDiscovery] Error fetching user:', err);
+      console.log('[useDiscovery] Error fetching user:', err);
       setError(err.message || 'Failed to load new people');
+      setCurrentUser(null);
       return null;
     } finally {
       setLoading(false);
@@ -70,10 +72,11 @@ function useDiscovery() {
    */
   const isValidUser = useCallback((user) => user && user.userid && user.userid !== 'undefined', []);
 
-  // Load initial user on mount
+  // Load initial user on mount (only once)
   useEffect(() => {
     fetchRandomUser();
-  }, [fetchRandomUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     currentUser,

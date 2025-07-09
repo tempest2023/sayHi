@@ -113,12 +113,12 @@ class UserService extends Service {
 
   /**
    * insert a new user
-   * @param {object} data user info {password, realname, username = 'username', email, status = 'ACTIVE', introduction = "This guy didn't write the introduction.", age = 0, gender = "unknown", avatar = '', cover_image = ''}
+   * @param {object} data user info {password, realname, username = 'username', email, status = 'ACTIVE', age = 0, gender = "unknown", avatar = ''}
    */
   async insert(data) {
     const nowTime = new Date().getTime();
     // create a new user
-    const { password, realname, username = 'username', email, status = 'ACTIVE', introduction = "This guy didn't write the introduction.", age = 0, gender = 'unknown', avatar = '', cover_image = '' } = data;
+    const { password, realname, username = 'username', email, status = 'ACTIVE', age = 0, gender = 'unknown', avatar = '' } = data;
     let userid = uuidv4();
     let useridDup = await this.query({ userid });
     while (useridDup && useridDup.success) {
@@ -134,8 +134,8 @@ class UserService extends Service {
         errmsg: 'fail to register, duplicate email'
       };
     }
-    const res = await this.ctx.service.base.insert('user', { username, userid, email, password, realname, age, gender, avatar, cover_image, introduction, create_time: nowTime, edit_time: nowTime, status });
-    console.log(`[service.user.insert] DB: ${JSON.stringify({ username, userid, email, password, realname, age, gender, avatar, cover_image, introduction, create_time: nowTime, edit_time: nowTime, status })}, result: ${JSON.stringify(res)}`);
+    const res = await this.ctx.service.base.insert('user', { username, userid, email, password, realname, age, gender, avatar, create_time: nowTime, edit_time: nowTime, status });
+    console.log(`[service.user.insert] DB: ${JSON.stringify({ username, userid, email, password, realname, age, gender, avatar, create_time: nowTime, edit_time: nowTime, status })}, result: ${JSON.stringify(res)}`);
     if (!res) {
       return {
         success: false,

@@ -8,12 +8,12 @@ const ROLE = require('../role');
 
 class MessageService extends Service {
   async queryAll(data, role) {
-    const { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} } = data;
+    const { start = 0, end = 10, sort = ['id', 'ASC'], filter = {} } = data;
     const message = await this.ctx.service.base.select('message', {
-      orders: [ sort ], // sort order
+      orders: [sort], // sort order
       limit: end - start, // limit the return rows
       offset: start, // data offset
-      where: { ...filter },
+      where: { ...filter }
     });
     console.log(`[service.message.queryAll] DB: result: ${JSON.stringify(message)}`);
     const count = await this.ctx.service.base.count('message', filter);
@@ -22,17 +22,17 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1001,
-        errmsg: 'fail to get result for this info',
+        errmsg: 'fail to get result for this info'
       };
     }
-    if(role === ROLE.RECEIVER) {
+    if (role === ROLE.RECEIVER) {
       // update retrieve_time for all messages
       const retrieve_time = String(new Date().getTime());
       const updateReqList = [];
       message.forEach(msg => {
         updateReqList.push(this.ctx.service.base.update('message', {
           id: msg.id,
-          retrieve_time,
+          retrieve_time
         }));
       });
       const updateRes = await Promise.all(updateReqList);
@@ -48,7 +48,7 @@ class MessageService extends Service {
     return {
       data: message,
       success: true,
-      count,
+      count
     };
   }
 
@@ -59,16 +59,16 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1001,
-        errmsg: 'fail to get result for this info',
+        errmsg: 'fail to get result for this info'
       };
     }
-    if(role === ROLE.RECEIVER) {
+    if (role === ROLE.RECEIVER) {
       // update retrieve_time for all messages
       const retrieve_time = String(new Date().getTime());
       const updateReqList = [];
       message.forEach(msg => {
         updateReqList.push(this.ctx.service.base.update('message', {
-          retrieve_time,
+          retrieve_time
         }, { id: msg.id }));
       });
       const updateRes = await Promise.all(updateReqList);
@@ -82,7 +82,7 @@ class MessageService extends Service {
 
     return {
       data: message[0],
-      success: true,
+      success: true
     };
   }
 
@@ -101,7 +101,7 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 2003,
-        errmsg: 'duplicate inserting',
+        errmsg: 'duplicate inserting'
       };
     }
     const res = await this.ctx.service.base.insert('message', { id, userid, receiver_userid, message, create_time: nowTime, retrieve_time: '', edit_time: nowTime });
@@ -110,11 +110,12 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1002,
-        errmsg: 'fail to insert',
+        errmsg: 'fail to insert'
       };
     }
-    return { success: true, data: {id: res.insertId} };
+    return { success: true, data: { id: res.insertId } };
   }
+
   /**
    * Update message info by id
    * @param {object} data
@@ -128,7 +129,7 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1005,
-        errmsg: 'fail to find the item when updating',
+        errmsg: 'fail to find the item when updating'
       };
     }
 
@@ -139,7 +140,7 @@ class MessageService extends Service {
     const res = await this.ctx.service.base.update('message', {
       message: text || message.message,
       retrieve_time: retrieve_time || message.retrieve_time,
-      edit_time: nowTime,
+      edit_time: nowTime
     }, { id });
 
     console.log(`[service.message.update] DB: ${JSON.stringify({ id, text, retrieve_time })} result: ${JSON.stringify(res)}`);
@@ -148,18 +149,19 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1003,
-        errmsg: 'fail to update',
+        errmsg: 'fail to update'
       };
     }
     return { success: true, data: { ...message, ...data } };
   }
+
   async delete(data) {
     const { id, userid, receiver_userid } = data;
     if (!userid && !receiver_userid) {
       return {
         success: false,
         errno: 1005,
-        errmsg: 'fail to find the item when deleting',
+        errmsg: 'fail to find the item when deleting'
       };
     }
     const message = await this.query({ id });
@@ -167,7 +169,7 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1005,
-        errmsg: 'fail to find the item when deleting',
+        errmsg: 'fail to find the item when deleting'
       };
     }
     let res;
@@ -181,7 +183,7 @@ class MessageService extends Service {
       return {
         success: false,
         errno: 1004,
-        errmsg: 'fail to delete',
+        errmsg: 'fail to delete'
       };
     }
     return { success: true, data: message.data };

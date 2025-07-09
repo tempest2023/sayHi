@@ -14,7 +14,7 @@ class UserController extends BaseController {
     const createRule = {
       username: { type: 'string', required: false },
       email: { type: 'string', required: false },
-      password: { type: 'string' },
+      password: { type: 'string' }
       // now we only use username to login,
       // [TODO] add password and third-part login
     };
@@ -51,7 +51,7 @@ class UserController extends BaseController {
 
   async index() {
     const { ctx } = this;
-    const { start = 0, end = 10, sort = [ 'id', 'ASC' ], filter = {} } = ctx.request.body;
+    const { start = 0, end = 10, sort = ['id', 'ASC'], filter = {} } = ctx.request.body;
     const res = await ctx.service.user.queryAll({ start, end, sort, filter });
     console.log(`[controller.users.index] ${JSON.stringify(res)}`);
     ctx.set('x-total-count', res.count);
@@ -60,13 +60,13 @@ class UserController extends BaseController {
     }
     return (ctx.body = {
       errno: 0,
-      ...res,
+      ...res
     });
   }
 
   async new() {
     return (this.ctx.body = {
-      errno: 0,
+      errno: 0
     });
   }
 
@@ -75,7 +75,7 @@ class UserController extends BaseController {
     const createRule = {
       email: { type: 'string' },
       password: { type: 'string' },
-      realname: { type: 'string' },
+      realname: { type: 'string' }
     };
     ctx.validate(createRule, ctx.request.body);
     const data = await ctx.service.user.insert({ ...ctx.request.body });
@@ -88,19 +88,18 @@ class UserController extends BaseController {
     const userid = this.getUserId();
 
     const createRule = {
-      userid: { type: 'string' },
+      userid: { type: 'string' }
     };
     ctx.validate(createRule, { userid });
 
     const data = await ctx.service.user.query({ userid });
     console.log(`[controller.users.show] ${JSON.stringify(data)}`);
     return (ctx.body = { errno: 0, ...data });
-
   }
 
   async edit() {
     return (this.ctx.body = {
-      errno: 0,
+      errno: 0
     });
   }
 
@@ -112,7 +111,7 @@ class UserController extends BaseController {
       email: { type: 'string' },
       gender: { type: 'string' },
       age: { type: 'int' },
-      userid: { type: 'string' },
+      userid: { type: 'string' }
     };
     const userid = ctx.request.header['x-userid'];
     const query = {
@@ -121,7 +120,7 @@ class UserController extends BaseController {
       realname: ctx.request.body.realname,
       email: ctx.request.body.email,
       gender: ctx.request.body.gender,
-      age: ctx.request.body.age,
+      age: ctx.request.body.age
     };
     console.log('[controller.users.update] ', JSON.stringify(query));
     ctx.validate(createRule, query);
@@ -135,7 +134,7 @@ class UserController extends BaseController {
     const { ctx } = this;
     const userid = this.getUserId();
     const createRule = {
-      userid: { type: 'string' },
+      userid: { type: 'string' }
     };
     ctx.validate(createRule, { userid });
     const data = await ctx.service.user.delete({ userid });

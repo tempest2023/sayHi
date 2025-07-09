@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 });
 
 function PickScreen({ navigation }) {
-  const [stranger, setStranger] = useState({});
+  const [stranger, setStranger] = useState(null);
   const [msgTitle, setMsgTitle] = useState('');
   const [msg, setMsg] = useState('');
   const [visible, setVisible] = useState(false);
@@ -69,51 +69,55 @@ function PickScreen({ navigation }) {
     navigation.navigate('ChatScreen', { userid: stranger.userid });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     const randomPickUpExceptMe = async () => {
       const res = await randomPickUp();
-      if(!res || !res.success) {
+      if (!res || !res.success) {
         setMsgTitle('Error');
         setMsg(res.errmsg || 'Network Error');
         showModal(setVisible);
         return null;
       }
       const userid = await getData('userid');
-      const info = res.data[0];
-      if (info.userid === userid) {
-        const nextOne = await randomPickUpExceptMe();
-        return nextOne;
+      if (res.data.length === 1 && res.data[0].userid === userid) {
+        return null;
       }
-      return info;
-    }
+      const info = res.data.find(u => u.userid !== userid);
+      return info || null;
+    };
     const pickUpStranger = async () => {
       const info = await randomPickUpExceptMe();
       setStranger(info);
-    }
+    };
     pickUpStranger();
   }, []);
+
   return (
-  <Background position="containerCenterWithTab">
-    <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
-    {stranger && <View style={styles.pickupCard}>
-      <Card>
-        <Card.Title title={stranger.realname || 'unknown'} subtitle={stranger.username || 'unknown'} />
-        <Card.Content>
-          <Avatar.Image size={64} style={styles.chatAvatar} source={stranger.avatar ? {uri: stranger.avatar} : defaultAvatar} />
-          <Title>Introduction</Title>
-          <Text>Gender: {stranger.gender || 'unknown'}</Text>
-          <Text>Age: {stranger.age || 'unknown'}</Text>
-          <Text>Email: {stranger.email || 'unknown'}</Text>
-        </Card.Content>
-        {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-        <Card.Actions style={styles.cardAction}>
-          <Button style={styles.skipButton} onPress={skip}>Skip</Button>
-          <Button style={styles.chatButton} onPress={chat}>Chat</Button>
-        </Card.Actions>
-      </Card>
-    </View>}
-    <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
-  </Background>);
+    <Background position="containerCenterWithTab">
+      <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
+      {stranger ? (
+        <View style={styles.pickupCard}>
+          <Card>
+            <Card.Title title={stranger.realname || 'unknown'} subtitle={stranger.username || 'unknown'} />
+            <Card.Content>
+              <Avatar.Image size={64} style={styles.chatAvatar} source={stranger.avatar ? {uri: stranger.avatar} : defaultAvatar} />
+              <Title>Introduction</Title>
+              <Text>Gender: {stranger.gender || 'unknown'}</Text>
+              <Text>Age: {stranger.age || 'unknown'}</Text>
+              <Text>Email: {stranger.email || 'unknown'}</Text>
+            </Card.Content>
+            <Card.Actions style={styles.cardAction}>
+              <Button style={styles.skipButton} onPress={skip}>Skip</Button>
+              <Button style={styles.chatButton} onPress={chat}>Chat</Button>
+            </Card.Actions>
+          </Card>
+        </View>
+      ) : (
+        <Paragraph>No one to recommend</Paragraph>
+      )}
+      <TabNavigation navigation={navigation} tabs={tabs} active="PickScreen" />
+    </Background>
+  );
 }
 
 PickScreen.propTypes = {

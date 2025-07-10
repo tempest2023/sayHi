@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
@@ -7,29 +7,9 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import TextInput from '../components/TextInput';
-import theme from '../theme';
 import { emailValidator, passwordValidator } from '../utils';
 import login from '../apis/login';
 import { saveData, secureSave } from '../apis/localStorage';
-
-const styles = StyleSheet.create({
-  forgotPassword: {
-    width: '100%',
-    alignItems: 'flex-end',
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
-  },
-  label: {
-    color: theme.colors.secondary,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
-});
 
 function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -88,7 +68,7 @@ function LoginScreen({ navigation }) {
         errorText={password.error}
         secureTextEntry
       />
-      <View style={styles.forgotPassword}>
+      <View className="w-full items-end mb-6">
         <TouchableOpacity
           onPress={() => {
             setMsg('Please contact with the operator: tar118@pitt.edu');
@@ -96,22 +76,21 @@ function LoginScreen({ navigation }) {
             showModal(setVisible)
           }}
         >
-          <Text style={styles.label}>Forgot your password?</Text>
+          <Text className="text-secondary">Forgot your password?</Text>
         </TouchableOpacity>
       </View>
       <Button mode="contained" onPress={onLoginPressed}>
         Login
       </Button>
-      <View style={styles.row}>
-        <Text style={styles.label}>Don’t have an account? </Text>
+      <View className="flex-row mt-1">
+        <Text className="text-secondary">Don&apos;t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
+          <Text className="font-bold text-primary">Sign up</Text>
         </TouchableOpacity>
       </View>
     </Background>
   );
 }
-
 
 LoginScreen.propTypes = {
   navigation: PropTypes.object.isRequired,

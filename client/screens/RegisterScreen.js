@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types' ;
 import Background from '../components/Background';
 import Logo from '../components/Logo';
@@ -7,30 +7,12 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
-import theme from '../theme';
 import {
   emailValidator,
   passwordValidator,
   nameValidator,
 } from '../utils';
 import registry from '../apis/registry';
-
-const styles = StyleSheet.create({
-  label: {
-    color: theme.colors.secondary,
-  },
-  button: {
-    marginTop: 24,
-  },
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-  },
-});
 
 function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: '', error: '' });
@@ -39,6 +21,7 @@ function RegisterScreen({ navigation }) {
   const [msgTitle, setMsgTitle] = useState('');
   const [msg, setMsg] = useState('');
   const [visible, setVisible] = useState(false);
+  
   const onSignUpPressed = async () => {
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
@@ -104,14 +87,14 @@ function RegisterScreen({ navigation }) {
         secureTextEntry
       />
 
-      <Button mode="contained" onPress={onSignUpPressed} style={styles.button}>
+      <Button mode="contained" onPress={onSignUpPressed} style={{ marginTop: 24 }}>
         Sign Up
       </Button>
 
-      <View style={styles.row}>
-        <Text style={styles.label}>Already have an account? </Text>
+      <View className="flex-row mt-1">
+        <Text className="text-secondary">Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-          <Text style={styles.link}>Login</Text>
+          <Text className="font-bold text-primary">Login</Text>
         </TouchableOpacity>
       </View>
     </Background>

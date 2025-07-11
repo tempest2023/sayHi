@@ -44,14 +44,14 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22'
-        cache: 'yarn'
-        cache-dependency-path: server/yarn.lock
+        cache: 'npm'
+        cache-dependency-path: server/package-lock.json
 
     - name: Install dependencies
       timeout-minutes: 10
       run: |
         cd server
-        yarn install
+        npm run install
 
     - name: Wait for MySQL
       run: |

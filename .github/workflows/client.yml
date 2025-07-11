@@ -26,14 +26,14 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22'
-        cache: 'yarn'
-        cache-dependency-path: client/yarn.lock
+        cache: 'npm'
+        cache-dependency-path: client/package-lock.json
 
     - name: Install dependencies
       timeout-minutes: 10
       run: |
         cd client
-        yarn install
+        npm install
 
     - name: Lint code
       run: |

@@ -1,47 +1,50 @@
 import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
-import { Dialog, Portal, Paragraph, Button } from 'react-native-paper';
+import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../theme';
-
-const styles = StyleSheet.create({
-  normal: {
-    backgroundColor: 'white',
-    color: theme.colors.primary,
-    padding: 5,
-    margin: 5,
-  },
-  warn: {
-    backgroundColor: '#ffc400',
-    color: theme.colors.primary,
-    padding: 5,
-    margin: 5
-  },
-  error: {
-    backgroundColor: '#f00f00',
-    color: theme.colors.primary,
-    padding: 5,
-    margin: 5
-  },
-  okText: {
-    color: theme.colors.secondary,
-  }
-});
 
 function MsgModal({ title = 'Notification', msg, type = 'normal', okText, okCallback, cancelText, cancelCallback, visible = false}) {
+  const getModalTypeClasses = () => {
+    switch(type) {
+      case 'warn':
+        return 'bg-yellow-400';
+      case 'error':
+        return 'bg-red-500';
+      default:
+        return 'bg-white';
+    }
+  };
+
   return (
-      <Portal>
-        <Dialog visible={visible} style={styles[type]}>
-        <Dialog.Title>{title}</Dialog.Title>
-          <Dialog.Content>
-                <Paragraph>{msg}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button style={styles.okText} onPress={okCallback}>{okText || 'OK'}</Button>
-            {cancelCallback && cancelText && <Button onPress={cancelCallback}>{cancelText || 'Cancel'}</Button>}
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+    <Modal
+      transparent
+      visible={visible}
+      animationType="fade"
+    >
+      <View className="flex-1 justify-center items-center bg-black/50">
+        <View className={`${getModalTypeClasses()} p-5 m-5 rounded-lg w-80 max-w-sm`}>
+          <Text className="text-lg font-bold text-primary mb-4">{title}</Text>
+          <View className="mb-6">
+            <Text className="text-base leading-7 text-secondary">{msg}</Text>
+          </View>
+          <View className="flex-row justify-end">
+            <TouchableOpacity 
+              className="py-2 px-4 mr-2"
+              onPress={okCallback}
+            >
+              <Text className="text-secondary font-medium">{okText || 'OK'}</Text>
+            </TouchableOpacity>
+            {cancelCallback && cancelText && (
+              <TouchableOpacity 
+                className="py-2 px-4"
+                onPress={cancelCallback}
+              >
+                <Text className="text-secondary font-medium">{cancelText || 'Cancel'}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
 

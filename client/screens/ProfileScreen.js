@@ -1,13 +1,11 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import { View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import { emailValidator, nameValidator, ageValidator, genderValidator, usernameValidator } from '../utils';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import Background from '../components/Background';
 import Header from '../components/Header';
 import TextInput from '../components/TextInput';
-import theme from '../theme';
 import tabs from './tabs';
 import Button from '../components/Button';
 import TabNavigation from '../components/TabNavigation';
@@ -16,27 +14,6 @@ import updateProfile from '../apis/updateProfile';
 import { saveData, secureSave } from '../apis/localStorage';
 
 const defaultAvatar = require('../assets/default_avatar.png');
-
-const styles = StyleSheet.create({
-  profileHeader: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: 80,
-  },
-  back: {
-    width: '100%',
-    marginTop: 12,
-  },
-  button: {
-    marginTop: 12,
-  },
-  label: {
-    color: theme.colors.secondary,
-    width: '100%',
-  },
-});
 
 function ProfileScreen({ navigation }) {
   const [avatar, setAvatar] = useState(null);
@@ -82,6 +59,7 @@ function ProfileScreen({ navigation }) {
      }
     getUserProfile();
   }, [navigation])
+  
   const onSendPressed = async () => {
     const emailError = emailValidator(email.value);
     const usernameError = usernameValidator(username.value);
@@ -135,12 +113,15 @@ function ProfileScreen({ navigation }) {
 
   return (
     <Background>
-      <View style={styles.profileHeader}>
-        <Avatar.Image size={64} source={avatar ? {uri: avatar} : defaultAvatar} />
+      <View className="flex-col justify-center items-center w-full h-20">
+        <Image 
+          source={avatar ? {uri: avatar} : defaultAvatar}
+          className="w-16 h-16 rounded-full"
+        />
       </View>
       
       <Header>{username.value}</Header>
-      <TextInput label="UserNnme" value={username.value} onChangeText={text => setUsername({ value: text, error: '' })} autoCapitalize="none" error={!!username.error} errorText={username.error}/>
+      <TextInput label="UserName" value={username.value} onChangeText={text => setUsername({ value: text, error: '' })} autoCapitalize="none" error={!!username.error} errorText={username.error}/>
       <TextInput label="Real Name" value={realname.value} onChangeText={text => setRealname({ value: text, error: '' })} autoCapitalize="none" error={!!realname.error} errorText={realname.error}/>
       
       <TextInput
@@ -160,10 +141,10 @@ function ProfileScreen({ navigation }) {
       
       <TextInput label="Age" value={age.value} onChangeText={text => setAge({ value: text, error: '' })} autoCapitalize="none" error={!!age.error} errorText={age.error}/>
 
-      <Button mode="contained" onPress={onSendPressed} style={styles.button}>
+      <Button mode="contained" onPress={onSendPressed} style={{ marginTop: 12 }}>
         Update Profile
       </Button>
-      <Button mode="contained" onPress={onLogout} style={styles.button}>
+      <Button mode="contained" onPress={onLogout} style={{ marginTop: 12 }}>
         Logout
       </Button>
       <TabNavigation navigation={navigation} tabs={tabs} active="ProfileScreen" />

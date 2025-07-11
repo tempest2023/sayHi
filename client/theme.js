@@ -1,11 +1,13 @@
-import { MD3LightTheme } from 'react-native-paper';
-
 const theme = {
-  ...MD3LightTheme,
   colors: {
-    ...MD3LightTheme.colors,
     primary: '#2A93D5',
     secondary: '#6677CC',
+    surface: '#ffffff',
+    background: '#f6f6f6',
+    error: '#B00020',
+    onSurface: '#000000',
+    onBackground: '#000000',
+    text: '#000000',
   },
 };
 

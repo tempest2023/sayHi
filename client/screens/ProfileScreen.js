@@ -112,41 +112,40 @@ function ProfileScreen({ navigation }) {
   }
 
   return (
-    <Background>
-      <View className="flex-col justify-center items-center w-full h-20">
-        <Image 
-          source={avatar ? {uri: avatar} : defaultAvatar}
-          className="w-16 h-16 rounded-full"
+    <Background position="containerCenterWithTab">
+      <View className="w-full" style={{ paddingBottom: 96 }}>
+        <View className="w-full flex flex-col items-center mt-2 mb-2">
+          <Image 
+            source={avatar ? {uri: avatar} : defaultAvatar}
+            className="rounded-full border-4 border-white shadow-md mb-2"
+            style={{ width: 96, height: 96 }}
+          />
+          <Header>{username.value}</Header>
+        </View>
+        <TextInput label="UserName" value={username.value} onChangeText={text => setUsername({ value: text, error: '' })} autoCapitalize="none" error={!!username.error} errorText={username.error} style={{ marginBottom: 8 }}/>
+        <TextInput label="Real Name" value={realname.value} onChangeText={text => setRealname({ value: text, error: '' })} autoCapitalize="none" error={!!realname.error} errorText={realname.error} style={{ marginBottom: 8 }}/>
+        <TextInput
+          label="email"
+          returnKeyType="done"
+          value={email.value}
+          onChangeText={text => setEmail({ value: text, error: '' })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          style={{ marginBottom: 8 }}
         />
+        <TextInput label="Gender" value={gender.value} onChangeText={text => setGender({ value: text, error: '' })} autoCapitalize="none" error={!!gender.error} errorText={gender.error} style={{ marginBottom: 8 }}/>
+        <TextInput label="Age" value={age.value} onChangeText={text => setAge({ value: text, error: '' })} autoCapitalize="none" error={!!age.error} errorText={age.error} style={{ marginBottom: 12 }}/>
+        <Button mode="contained" onPress={onSendPressed} style={{ marginTop: 12 }}>
+          Update Profile
+        </Button>
+        <Button mode="contained" onPress={onLogout} style={{ marginTop: 12 }}>
+          Logout
+        </Button>
       </View>
-      
-      <Header>{username.value}</Header>
-      <TextInput label="UserName" value={username.value} onChangeText={text => setUsername({ value: text, error: '' })} autoCapitalize="none" error={!!username.error} errorText={username.error}/>
-      <TextInput label="Real Name" value={realname.value} onChangeText={text => setRealname({ value: text, error: '' })} autoCapitalize="none" error={!!realname.error} errorText={realname.error}/>
-      
-      <TextInput
-        label="email"
-        returnKeyType="done"
-        value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
-
-      <TextInput label="Gender" value={gender.value} onChangeText={text => setGender({ value: text, error: '' })} autoCapitalize="none" error={!!gender.error} errorText={gender.error}/>
-      
-      <TextInput label="Age" value={age.value} onChangeText={text => setAge({ value: text, error: '' })} autoCapitalize="none" error={!!age.error} errorText={age.error}/>
-
-      <Button mode="contained" onPress={onSendPressed} style={{ marginTop: 12 }}>
-        Update Profile
-      </Button>
-      <Button mode="contained" onPress={onLogout} style={{ marginTop: 12 }}>
-        Logout
-      </Button>
       <TabNavigation navigation={navigation} tabs={tabs} active="ProfileScreen" />
       <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
     </Background>

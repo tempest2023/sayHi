@@ -1,34 +1,27 @@
 import React, { memo } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button as PaperButton } from 'react-native-paper';
+import { TouchableOpacity, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../theme';
-
-const styles = StyleSheet.create({
-  button: {
-    width: 200,
-    marginVertical: 10,
-  },
-  text: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    lineHeight: 26,
-  },
-});
 
 function Button({ mode, style, children, ...props }) {
-  return <PaperButton
-    style={[
-      styles.button,
-      mode === 'outlined' && { backgroundColor: theme.colors.surface },
-      style,
-    ]}
-    labelStyle={styles.text}
-    mode={mode}
-    {...props}
-  >
-    {children}
-  </PaperButton>
+  const baseClasses = "w-52 my-2.5 py-3 px-4 rounded-md items-center justify-center";
+  const modeClasses = mode === 'outlined' 
+    ? "bg-white border-2 border-primary" 
+    : "bg-primary";
+  const textClasses = mode === 'outlined' 
+    ? "text-primary font-bold text-base" 
+    : "text-white font-bold text-base";
+
+  return (
+    <TouchableOpacity
+      className={`${baseClasses} ${modeClasses}`}
+      style={style}
+      {...props}
+    >
+      <Text className={textClasses}>
+        {children}
+      </Text>
+    </TouchableOpacity>
+  );
 }
 
 Button.propTypes = {

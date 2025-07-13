@@ -8,30 +8,30 @@
 The client part of FC Challenge based on React Native
 
 ## Dependencies Installs
-`yarn install`
+`npm install`
 
 ## Launch a iOS app
 Require: Mac OS
 Open a iOS simulator first: `open -a simulator`
 If you don't have a simulator, install one before launch.
 After open the simulator, run this command to launch the app on your simulator
-`yarn ios`
+`npm run ios`
 
 ## Launch an Android app
 Require: Android Simulator
-`yarn android`
+`npm run android`
 
 ## Run Web Version
-`yarn web`
+`npm run web`
 
 If you meet errors because your node version is not 16, you can add env variable like this:
 ```
-NODE_OPTIONS=--openssl-legacy-provider yarn web
+NODE_OPTIONS=--openssl-legacy-provider npm run web
 ```
 
 
 ## Components Library
-[react-native-paper](https://callstack.github.io/react-native-paper/getting-started.html)
+[nativewind](https://www.nativewind.dev/)
 
 ## Router
 

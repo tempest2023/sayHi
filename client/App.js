@@ -1,11 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
 import * as React from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
+import './global.css';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux'
 import store from './store';
-import theme from './theme';
 import {
   HomeScreen,
   LoginScreen,
@@ -36,11 +34,9 @@ function AppPageRouter () {
 function App() {
   return (
   <Provider store={store}>
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <AppPageRouter />
-      </NavigationContainer>
-    </PaperProvider>
+    <NavigationContainer>
+      <AppPageRouter />
+    </NavigationContainer>
   </Provider>);
 }
 

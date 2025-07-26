@@ -1,46 +1,10 @@
 import React, { memo } from 'react';
 import {
   ImageBackground,
-  StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import BackgroundDot from '../assets/background_dot.png';
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-  },
-  container: {
-    flex: 1,
-    padding: 10,
-    width: '100%',
-    maxWidth: 380,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  containerCenter: {
-    flex: 1,
-    padding: 10,
-    width: '100%',
-    maxWidth: 380,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  containerCenterWithTab: {
-    flex: 1,
-    padding: 10,
-    width: '100%',
-    maxWidth: 380,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: 80,
-  }
-});
 
 /**
  * KeyboardAvoidingView: This component will automatically adjust its height, position, or bottom padding based on \
@@ -48,15 +12,28 @@ const styles = StyleSheet.create({
  */
 
 function Background({ position="container", children }) {
-  return <ImageBackground
-    source={BackgroundDot}
-    resizeMode="repeat"
-    style={styles.background}
-  >
-    <KeyboardAvoidingView style={styles[position]} behavior="padding">
-      {children}
-    </KeyboardAvoidingView>
-  </ImageBackground>
+  const getPositionClasses = () => {
+    switch(position) {
+      case 'containerCenter':
+        return 'flex-1 p-2.5 w-full max-w-sm self-center items-center justify-center';
+      case 'containerCenterWithTab':
+        return 'flex-1 p-2.5 w-full max-w-sm self-center items-center justify-start mt-20';
+      default:
+        return 'flex-1 p-2.5 w-full max-w-sm self-center items-center justify-start';
+    }
+  };
+
+  return (
+    <ImageBackground
+      source={BackgroundDot}
+      resizeMode="repeat"
+      className="flex-1 w-full"
+    >
+      <KeyboardAvoidingView className={getPositionClasses()} behavior="padding">
+        {children}
+      </KeyboardAvoidingView>
+    </ImageBackground>
+  );
 }
 
 Background.propTypes = {

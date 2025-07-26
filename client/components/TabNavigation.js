@@ -1,66 +1,9 @@
 import React, { useState, memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { Avatar, Text } from 'react-native-paper';
-import theme from '../theme';
+import { View, TouchableOpacity, Dimensions, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ScreenWidth = Dimensions.get('window').width;
-
-const tabBackgroundColor = '#eee';
-
-const styles = StyleSheet.create({
-  bottomFixed: {
-    position: 'absolute',
-    bottom: 0,
-    width: ScreenWidth,
-    height: 80
-  },
-  bottomTab: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 60,
-    width: '100%',
-    margin: 5,
-    marginBottom: 40,
-    backgroundColor: tabBackgroundColor,
-  },
-  tabItem: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#555',
-    marginTop: 5,
-  },
-  activeTabItem: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#fff',
-    marginTop: 5,
-  },
-  tabIcon: {
-    marginBottom: 5,
-    backgroundColor: tabBackgroundColor,
-  },
-  activeTabIcon: {
-    marginBottom: 5,
-    backgroundColor: theme.colors.primary,
-  },
-  tabText: {
-    color: '#555',
-    fontSize: 12,
-  },
-  activeTabText: {
-    color: theme.colors.primary,
-    fontSize: 12,
-  }
-})
 
 function TabNavigation({ navigation, tabs, active }) {
   const [tabItems, setTabItems] = useState([]);
@@ -74,22 +17,41 @@ function TabNavigation({ navigation, tabs, active }) {
     tabs.forEach(item => {
       const isActive = active === item.key;
       tmp.push(
-      <TouchableOpacity key={`tab_${item.key}`} onPress={()=>{changeTab(item.key)}} style={isActive ? styles.activeTabItem : styles.tabItem}>
-        <Avatar.Icon style={isActive ? styles.activeTabIcon : styles.tabIcon} size={36} icon={isActive ? item.focusedIcon : item.unfocusedIcon} />
-        <Text style={isActive ? styles.activeTabText : styles.tabText}>{item.title}</Text>
-      </TouchableOpacity>);
+        <TouchableOpacity 
+          key={`tab_${item.key}`} 
+          onPress={()=>{changeTab(item.key)}} 
+          className="flex-1 flex-col justify-center items-center mt-1"
+        >
+          <View className={`mb-1 w-9 h-9 rounded-full items-center justify-center ${
+            isActive ? 'bg-primary' : 'bg-gray-200'
+          }`}>
+            <Icon 
+              name={isActive ? item.focusedIcon : item.unfocusedIcon} 
+              size={20} 
+              color={isActive ? '#ffffff' : '#555555'} 
+            />
+          </View>
+          <Text className={`text-xs ${isActive ? 'text-primary' : 'text-gray-600'}`}>
+            {item.title}
+          </Text>
+        </TouchableOpacity>
+      );
     })
     setTabItems(tmp);
   }, [tabs, active, navigation]);
 
   return (
-    <View style={styles.bottomFixed}>
-      <View style={styles.bottomTab}>
+    <View 
+      className="absolute bottom-0 h-20"
+      style={{ width: ScreenWidth }}
+    >
+      <View className="flex-row justify-around items-center h-15 w-full m-1 mb-10 bg-gray-200">
         {tabItems}
       </View>
     </View>
   );
 }
+
 TabNavigation.propTypes = {
   navigation: PropTypes.object.isRequired,
   tabs: PropTypes.array.isRequired,

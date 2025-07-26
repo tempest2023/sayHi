@@ -1,42 +1,16 @@
 import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
-import { Card, Title, Avatar, Text } from 'react-native-paper';
+import { View, Image, Text } from 'react-native';
 import MsgModal, { showModal, hideModal } from '../components/MsgModal';
 import randomPickUp from '../apis/pickup';
 import Background from '../components/Background';
-import Header from '../components/Header';
 import Paragraph from '../components/Paragraph';
 import Button from '../components/Button';
 import TabNavigation from '../components/TabNavigation';
 import tabs from './tabs';
-import theme from '../theme';
 import { getData } from '../apis/localStorage';
 
 const defaultAvatar = require('../assets/default_avatar.png');
-
-const styles = StyleSheet.create({
-  pickupCard: {
-    width: '90%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
-  cardAction: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  skipButton: {
-    flex: 1,
-    backgroundColor: theme.colors.secondary 
-  },
-  chatButton: {
-    flex: 1,
-    backgroundColor: theme.colors.primary 
-  }
-});
 
 function PickScreen({ navigation }) {
   const [stranger, setStranger] = useState(null);
@@ -96,21 +70,46 @@ function PickScreen({ navigation }) {
     <Background position="containerCenterWithTab">
       <MsgModal title={msgTitle} msg={msg} type='normal' okText='Got it' okCallback={() => hideModal(setVisible)} visible={visible} />
       {stranger ? (
-        <View style={styles.pickupCard}>
-          <Card>
-            <Card.Title title={stranger.realname || 'unknown'} subtitle={stranger.username || 'unknown'} />
-            <Card.Content>
-              <Avatar.Image size={64} style={styles.chatAvatar} source={stranger.avatar ? {uri: stranger.avatar} : defaultAvatar} />
-              <Title>Introduction</Title>
-              <Text>Gender: {stranger.gender || 'unknown'}</Text>
-              <Text>Age: {stranger.age || 'unknown'}</Text>
-              <Text>Email: {stranger.email || 'unknown'}</Text>
-            </Card.Content>
-            <Card.Actions style={styles.cardAction}>
-              <Button style={styles.skipButton} onPress={skip}>Skip</Button>
-              <Button style={styles.chatButton} onPress={chat}>Chat</Button>
-            </Card.Actions>
-          </Card>
+        <View className="w-[90%] flex flex-col justify-center">
+          <View className="bg-white rounded-lg shadow-md overflow-hidden">
+            {/* Card Header */}
+            <View className="p-4 border-b border-gray-200">
+              <Text className="text-lg font-semibold text-gray-800">{stranger.realname || 'unknown'}</Text>
+              <Text className="text-sm text-gray-600">{stranger.username || 'unknown'}</Text>
+            </View>
+            
+            {/* Card Content */}
+            <View className="p-4">
+              <View className="items-center mb-4">
+                <Image 
+                  source={stranger.avatar ? {uri: stranger.avatar} : defaultAvatar}
+                  className="w-16 h-16 rounded-full"
+                />
+              </View>
+              <Text className="text-xl font-bold text-gray-800 mb-3">Introduction</Text>
+              <Text className="text-base text-gray-700 mb-2">Gender: {stranger.gender || 'unknown'}</Text>
+              <Text className="text-base text-gray-700 mb-2">Age: {stranger.age || 'unknown'}</Text>
+              <Text className="text-base text-gray-700 mb-2">Email: {stranger.email || 'unknown'}</Text>
+            </View>
+            
+            {/* Card Actions */}
+            <View className="p-4 flex flex-col justify-center items-center">
+              <Button 
+                mode="outlined" 
+                onPress={skip}
+                style={{ backgroundColor: '#6677CC', width: '100%', marginBottom: 10 }}
+              >
+                Skip
+              </Button>
+              <Button 
+                mode="contained" 
+                onPress={chat}
+                style={{ width: '100%' }}
+              >
+                Chat
+              </Button>
+            </View>
+          </View>
         </View>
       ) : (
         <Paragraph>No one to recommend</Paragraph>

@@ -1,36 +1,23 @@
 import React, { memo } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { TextInput as Input } from 'react-native-paper';
+import { View, TextInput as RNTextInput, Text } from 'react-native';
 import PropTypes from 'prop-types';
-import theme from '../theme';
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    marginVertical: 12,
-  },
-  input: {
-    backgroundColor: theme.colors.surface,
-  },
-  error: {
-    fontSize: 14,
-    color: theme.colors.error,
-    paddingHorizontal: 4,
-    paddingTop: 4,
-  },
-});
 
 function TextInput({ errorText, ...props }) {
-  return <View style={styles.container}>
-    <Input
-      style={styles.input}
-      selectionColor={theme.colors.primary}
-      underlineColor="transparent"
-      mode="outlined"
-      {...props}
-    />
-    {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
-  </View>
+  return (
+    <View className="w-full my-3">
+      <RNTextInput
+        className="bg-white py-3 px-4 rounded-md border border-gray-300 text-base"
+        selectionColor="#2A93D5"
+        placeholderTextColor="#999"
+        {...props}
+      />
+      {errorText ? (
+        <Text className="text-sm text-red-600 px-1 pt-1">
+          {errorText}
+        </Text>
+      ) : null}
+    </View>
+  );
 }
 
 TextInput.propTypes = {

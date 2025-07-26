@@ -51,21 +51,21 @@ mysql -u username -p SayHi < sayhi.sql
 #### 4. Install dependencies and Run the server
 
 ```bash
-$ yarn install
-$ yarn dev
+$ npm install
+$ npm run dev
 $ open http://localhost:7001/
 ```
 
 ### Deploy
 
 ```bash
-$ yarn start
+$ npm start
 ```
 
 ### Deploy Tool
 
 ```bash
-yarn global add pm2
+npm global add pm2
 ```
 
 -  Use `pm2 start` to deploy node server, see [pm2](https://pm2.keymetrics.io/) for more detail.
